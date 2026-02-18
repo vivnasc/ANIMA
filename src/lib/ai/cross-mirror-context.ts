@@ -30,26 +30,26 @@ export async function buildCrossMirrorContext(
     return '' // No cross-mirror context yet
   }
 
-  let context = '\n\n=== CROSS-MIRROR CONTEXT ===\n'
-  context += 'The user has previously explored with other mirrors. Here are key patterns and insights:\n\n'
+  let context = '\n\n=== CONTEXTO CROSS-MIRROR ===\n'
+  context += 'O utilizador já explorou com outros espelhos. Aqui estão os padrões e insights chave:\n\n'
 
   if (patterns?.length) {
-    context += 'PATTERNS IDENTIFIED:\n'
+    context += 'PADRÕES IDENTIFICADOS:\n'
     patterns.forEach(p => {
-      context += `- [${p.discovered_in_mirror.toUpperCase()}] ${p.pattern_type}: ${p.pattern_description || 'No description'}\n`
+      context += `- [${p.discovered_in_mirror.toUpperCase()}] ${p.pattern_type}: ${p.pattern_description || 'Sem descrição'}\n`
     })
     context += '\n'
   }
 
   if (insights?.length) {
-    context += 'KEY INSIGHTS:\n'
+    context += 'INSIGHTS CHAVE:\n'
     insights.forEach(i => {
-      context += `- [${(i.mirror_slug || 'unknown').toUpperCase()}] ${i.insight_text}\n`
+      context += `- [${(i.mirror_slug || 'desconhecido').toUpperCase()}] ${i.insight_text}\n`
     })
   }
 
-  context += '\nReference these naturally when relevant, but don\'t force connections.\n'
-  context += '=== END CROSS-MIRROR CONTEXT ===\n\n'
+  context += '\nReferencia estes padrões naturalmente quando relevante, mas não forces conexões.\n'
+  context += '=== FIM DO CONTEXTO CROSS-MIRROR ===\n\n'
 
   return context
 }

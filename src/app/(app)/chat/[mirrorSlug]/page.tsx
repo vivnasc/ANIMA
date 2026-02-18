@@ -58,10 +58,10 @@ export default async function ChatPage({ params }: ChatPageProps) {
     .single()
 
   const convList = (conversations || []).map(c => ({
-    id: c.id as string,
-    title: c.title as string | null,
-    updated_at: c.updated_at as string,
-    message_count: c.message_count as number
+    id: String(c.id),
+    title: c.title ? String(c.title) : null,
+    updated_at: String(c.updated_at),
+    message_count: Number(c.message_count) || 0
   }))
 
   return (

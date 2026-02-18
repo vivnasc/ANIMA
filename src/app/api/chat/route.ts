@@ -93,9 +93,9 @@ export async function POST(req: NextRequest) {
         .insert({
           user_id: user.id,
           mirror_id: mirror.id,
-          language: userData?.language_preference || 'pt',
-          journey_phase_at_creation: journey?.current_phase || 'foundation'
-        } as Record<string, unknown>)
+          language: (userData?.language_preference || 'pt') as string,
+          journey_phase_at_creation: (journey?.current_phase || 'foundation') as string
+        })
         .select('id')
         .single()
 
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
     })
 
     const stream = await anthropic.messages.stream({
-      model: 'claude-sonnet-4-20250514',
+      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
       max_tokens: 1024,
       system: fullPrompt,
       messages: anthropicMessages
@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
               conversation_id: activeConversationId,
               role: 'assistant' as const,
               content: fullResponse,
-              model: 'claude-sonnet-4-20250514'
+              model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514'
             })
 
           // Update conversation message count and title
@@ -179,19 +179,19 @@ export async function POST(req: NextRequest) {
             .eq('id', activeConversationId)
             .single()
 
-          const updates: Record<string, unknown> = {
+          const convUpdates: { message_count: number; updated_at: string; title?: string } = {
             message_count: (conv?.message_count || 0) + 2,
             updated_at: new Date().toISOString()
           }
 
           // Auto-generate title from first user message
           if (!conv?.title && message) {
-            updates.title = message.substring(0, 80) + (message.length > 80 ? '...' : '')
+            convUpdates.title = message.substring(0, 80) + (message.length > 80 ? '...' : '')
           }
 
           await supabase
             .from('conversations')
-            .update(updates)
+            .update(convUpdates)
             .eq('id', activeConversationId)
 
           // Detect patterns in the response

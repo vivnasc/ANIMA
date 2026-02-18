@@ -1,9 +1,75 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+async function verifyPayPalWebhook(req: Request, body: Record<string, unknown>): Promise<boolean> {
+  const webhookId = process.env.PAYPAL_WEBHOOK_ID
+  if (!webhookId) return false
+
+  const transmissionId = req.headers.get('paypal-transmission-id')
+  const transmissionTime = req.headers.get('paypal-transmission-time')
+  const certUrl = req.headers.get('paypal-cert-url')
+  const transmissionSig = req.headers.get('paypal-transmission-sig')
+  const authAlgo = req.headers.get('paypal-auth-algo')
+
+  if (!transmissionId || !transmissionTime || !certUrl || !transmissionSig || !authAlgo) {
+    return false
+  }
+
+  try {
+    const mode = process.env.NEXT_PUBLIC_PAYPAL_MODE === 'live' ? 'api-m' : 'api-m.sandbox'
+    const clientId = process.env.PAYPAL_CLIENT_ID!
+    const clientSecret = process.env.PAYPAL_CLIENT_SECRET!
+
+    // Get access token
+    const tokenRes = await fetch(`https://${mode}.paypal.com/v1/oauth2/token`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'grant_type=client_credentials'
+    })
+    const tokenData = await tokenRes.json()
+
+    // Verify webhook signature
+    const verifyRes = await fetch(`https://${mode}.paypal.com/v1/notifications/verify-webhook-signature`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${tokenData.access_token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        auth_algo: authAlgo,
+        cert_url: certUrl,
+        transmission_id: transmissionId,
+        transmission_sig: transmissionSig,
+        transmission_time: transmissionTime,
+        webhook_id: webhookId,
+        webhook_event: body
+      })
+    })
+
+    const verifyData = await verifyRes.json()
+    return verifyData.verification_status === 'SUCCESS'
+  } catch (error) {
+    console.error('PayPal webhook verification failed:', error)
+    return false
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
+
+    // Verify webhook signature in production
+    if (process.env.NODE_ENV === 'production') {
+      const isValid = await verifyPayPalWebhook(req, body)
+      if (!isValid) {
+        console.error('Invalid PayPal webhook signature')
+        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+      }
+    }
+
     const supabase = await createClient()
 
     const eventType = body.event_type

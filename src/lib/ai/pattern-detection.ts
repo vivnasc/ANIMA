@@ -85,7 +85,7 @@ export async function detectAndSavePatterns(
         .select('id, integration_level')
         .eq('user_id', userId)
         .eq('pattern_type', patternType)
-        .single()
+        .maybeSingle()
 
       if (existing) {
         // Increase integration level (max 5)
