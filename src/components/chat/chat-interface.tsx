@@ -355,7 +355,7 @@ function ConversationList({
         onClick={onNew}
         className="w-full rounded-lg border border-dashed border-border px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
       >
-        + New conversation
+        + Nova conversa
       </button>
 
       {conversations.map((conv) => (
@@ -369,16 +369,16 @@ function ConversationList({
               : "hover:bg-muted/50 text-muted-foreground"
           )}
         >
-          <p className="truncate">{conv.title || 'New conversation'}</p>
+          <p className="truncate">{conv.title || 'Nova conversa'}</p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {conv.message_count} messages
+            {conv.message_count} mensagens
           </p>
         </button>
       ))}
 
       {conversations.length === 0 && (
         <p className="text-xs text-muted-foreground text-center py-4">
-          No conversations yet
+          Ainda sem conversas
         </p>
       )}
     </div>

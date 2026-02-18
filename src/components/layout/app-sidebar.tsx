@@ -26,12 +26,12 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
   const navItems = [
     {
-      label: 'Dashboard',
+      label: 'Painel',
       href: '/dashboard',
       icon: '📊',
     },
     {
-      label: 'Mirrors',
+      label: 'Espelhos',
       href: '/mirrors',
       icon: '🪞',
     },
@@ -80,7 +80,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         {!collapsed && (
           <div className="pt-4">
             <p className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Mirrors
+              Espelhos
             </p>
           </div>
         )}
@@ -128,7 +128,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                 onClick={handleSignOut}
                 className="text-xs text-muted-foreground hover:text-foreground"
               >
-                Sign out
+                Sair
               </button>
             </div>
           )}

@@ -16,8 +16,8 @@ export default async function SettingsPage() {
   return (
     <div className="container max-w-2xl py-8 px-4 space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="text-muted-foreground">Manage your account and subscription</p>
+        <h1 className="text-2xl font-bold">Definições</h1>
+        <p className="text-muted-foreground">Gere a tua conta e subscrição</p>
       </div>
 
       <SettingsForm
