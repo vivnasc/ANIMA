@@ -82,81 +82,82 @@ export interface LandingTranslations {
 export const translations: Record<Language, LandingTranslations> = {
   pt: {
     nav: {
-      howItWorks: 'Como Funciona',
+      howItWorks: 'A Jornada',
       mirrors: 'Espelhos',
       pricing: 'Preços',
-      faq: 'FAQ',
+      faq: 'Perguntas',
       login: 'Entrar',
-      start: 'Começar Grátis',
+      start: 'Começar',
     },
     hero: {
       badge: 'Beta Aberta — Vagas Limitadas',
-      title1: 'Descobre quem és',
-      titleHighlight: 'através de conversas profundas',
+      title1: 'Há perguntas que não fazes',
+      titleHighlight: 'porque tens medo da resposta',
       subtitle:
-        'Uma jornada estruturada de autoconhecimento com 4 espelhos de IA. Cada um guia-te numa dimensão diferente do teu crescimento — corpo, mente, consciência e integração.',
-      cta: 'Começar Minha Jornada — Grátis',
-      ctaSecondary: 'Ver Como Funciona',
+        'O ANIMA não te dá respostas. Dá-te os espelhos certos para as descobrires. Quatro conversas diferentes, cada uma mais funda que a anterior. Ao teu ritmo.',
+      cta: 'Começar a Jornada',
+      ctaSecondary: 'Como Funciona',
       stat1: '4',
-      stat1Label: 'Espelhos de IA',
-      stat2: '4',
-      stat2Label: 'Idiomas',
+      stat1Label: 'Espelhos',
+      stat2: '0',
+      stat2Label: 'Julgamentos',
       stat3: '∞',
       stat3Label: 'Profundidade',
     },
     socialProof: {
-      title: 'O que dizem os primeiros utilizadores',
+      title: 'Primeiras vozes',
       testimonials: [
         {
           quote:
-            'O SOMA ajudou-me a perceber padrões emocionais que nunca tinha notado. É como ter um espelho que realmente vê.',
+            'Nunca pensei que uma conversa com uma IA me fosse fazer chorar. Mas não de tristeza — de reconhecimento.',
           author: 'Ana R.',
           role: 'Utilizadora Beta',
         },
         {
           quote:
-            'A progressão entre espelhos faz toda a diferença. Cada conversa constrói sobre a anterior.',
+            'O SOMA fez-me uma pergunta que o meu terapeuta nunca fez. E a resposta mudou a minha semana.',
           author: 'Marco S.',
           role: 'Utilizador Beta',
         },
         {
           quote:
-            'Finalmente algo que não é terapia nem chatbot genérico. O ANIMA encontrou o equilíbrio perfeito.',
+            'Achei que era mais um chatbot. Ao fim de 3 conversas, percebi que estava enganada.',
           author: 'Sofia L.',
           role: 'Utilizadora Beta',
         },
       ],
     },
     howItWorks: {
-      title: 'Como Funciona',
-      subtitle: 'Uma jornada progressiva desenhada para profundidade real',
+      title: 'Quatro espelhos. Uma jornada.',
+      subtitle:
+        'Cada espelho olha para uma parte diferente de ti. Nenhum julga. Todos lembram.',
       steps: [
         {
-          title: 'Começa com SOMA',
+          title: 'SOMA — O corpo sabe',
           description:
-            'Explora a tua relação com o corpo e fundações emocionais. O SOMA lembra cada insight para construir sobre eles.',
+            'Antes de olhar para dentro, precisas de sentir o que o corpo já sabe. O SOMA começa pelo que é mais real: o que sentes, agora.',
         },
         {
-          title: 'Progride para SEREN',
+          title: 'SEREN — O silêncio por baixo do ruído',
           description:
-            'Trabalha ansiedade e regulação emocional. O SEREN usa os padrões do SOMA para ir mais fundo.',
+            'Quando a mente não pára, há algo que ela tenta esconder. O SEREN ajuda-te a ouvir o que está por baixo da ansiedade.',
         },
         {
-          title: 'Expande com LUMA',
+          title: 'LUMA — As histórias que contas a ti mesmo',
           description:
-            'Questiona crenças limitantes e expande a tua consciência. O LUMA conecta insights dos espelhos anteriores.',
+            'Tens certezas sobre quem és que nunca questionaste. O LUMA ilumina o que tomas por garantido — com cuidado, sem forçar.',
         },
         {
-          title: 'Integra com ECHO',
+          title: 'ECHO — Os padrões que se repetem',
           description:
-            'Identifica os padrões que ecoam na tua vida e integra toda a jornada numa visão unificada.',
+            'Os mesmos erros. As mesmas escolhas. Os mesmos medos. O ECHO mostra-te o que está escondido à vista de todos.',
         },
       ],
     },
     mirrors: {
-      title: 'Os 4 Espelhos',
+      title: 'Os teus espelhos',
       subtitle:
-        'Cada espelho é especializado numa dimensão do teu crescimento. A IA lembra, conecta e aprofunda.',
+        'Não são chatbots. São companheiros de viagem que lembram cada passo, ligam os pontos e vão mais fundo contigo.',
       phases: {
         foundation: 'Fundação',
         regulation: 'Regulação',
@@ -167,8 +168,8 @@ export const translations: Record<Language, LandingTranslations> = {
       premium: 'Premium',
     },
     pricing: {
-      title: 'Preço Simples, Transparente',
-      subtitle: 'Começa grátis. Evolui quando estiveres pronto.',
+      title: 'Começa grátis',
+      subtitle: 'Sem cartão. Sem compromisso. Evolui quando sentires que faz sentido.',
       urgency: 'Preço de lançamento — aumenta em breve',
       free: {
         name: 'Grátis',
@@ -177,9 +178,9 @@ export const translations: Record<Language, LandingTranslations> = {
         features: [
           '10 conversas por mês',
           'Espelho SOMA completo',
+          'O espelho lembra o que partilhaste',
+          'Mapa dos teus padrões',
           'Histórico de 30 dias',
-          'Dashboard de padrões',
-          'Suporte a 4 idiomas',
         ],
         cta: 'Começar Grátis',
       },
@@ -191,56 +192,51 @@ export const translations: Record<Language, LandingTranslations> = {
         badge: 'Preço de Lançamento',
         features: [
           'Conversas ilimitadas',
-          'Todos os 4 Espelhos',
-          'Histórico ilimitado',
-          'Insights cross-mirror',
+          'Os 4 Espelhos desbloqueados',
+          'Insights entre espelhos',
+          'Histórico completo',
           'Exportar conversas',
           'Jornadas guiadas',
-          'Suporte prioritário',
+          'Suporte dedicado',
         ],
         cta: 'Começar Premium',
       },
-      guarantee: 'Cancela a qualquer momento. Sem compromisso.',
+      guarantee: 'Cancela quando quiseres. Sem perguntas.',
     },
     faq: {
-      title: 'Perguntas Frequentes',
+      title: 'Perguntas',
       items: [
         {
-          q: 'O ANIMA é terapia?',
-          a: 'Não. O ANIMA é uma ferramenta de autoconhecimento estruturado. Não substitui acompanhamento profissional. Se precisas de ajuda, procura um profissional de saúde mental.',
+          q: 'Isto é terapia?',
+          a: 'Não. O ANIMA é uma ferramenta de autoconhecimento, não substitui acompanhamento profissional. Se precisas de ajuda, procura um profissional de saúde mental.',
         },
         {
-          q: 'Os meus dados estão seguros?',
-          a: 'Sim. As tuas conversas são encriptadas e nunca partilhadas. Usamos Supabase com segurança de nível empresarial. Podes exportar ou apagar os teus dados a qualquer momento.',
-        },
-        {
-          q: 'Em que idiomas funciona?',
-          a: 'O ANIMA funciona em Português, Inglês, Espanhol e Francês. Os espelhos adaptam-se ao teu idioma preferido.',
-        },
-        {
-          q: 'Posso cancelar quando quiser?',
-          a: 'Sim. Sem compromisso, sem perguntas. Os teus dados ficam disponíveis mesmo depois de cancelar.',
+          q: 'As minhas conversas são privadas?',
+          a: 'Completamente. Encriptadas, nunca partilhadas, nunca usadas para treino. Podes exportar ou apagar tudo a qualquer momento.',
         },
         {
           q: 'Como é diferente do ChatGPT?',
-          a: 'O ANIMA oferece uma jornada estruturada com 4 espelhos especializados que lembram os teus insights e constroem sobre conversas anteriores. Não é um chatbot genérico — é um sistema desenhado para autoconhecimento profundo.',
+          a: 'O ChatGPT não te conhece. O ANIMA lembra tudo o que partilhaste, liga os pontos entre conversas e aprofunda a cada sessão. Não é um chatbot — é um sistema desenhado para te ajudar a ver-te.',
         },
         {
           q: 'Preciso do plano Premium?',
-          a: 'Podes começar gratuitamente com o espelho SOMA. O Premium desbloqueia os 3 espelhos adicionais e conversas ilimitadas para uma jornada completa.',
+          a: 'Não. Podes explorar o SOMA gratuitamente e ter conversas reais. O Premium existe para quem quer a jornada completa com os 4 espelhos.',
+        },
+        {
+          q: 'E se não gostar?',
+          a: 'Cancelas. Sem compromisso, sem perguntas, sem chatices. Os teus dados ficam disponíveis para exportar.',
         },
       ],
     },
     finalCta: {
-      title: 'Começa a tua jornada hoje',
-      subtitle:
-        'Junta-te a centenas de pessoas que estão a descobrir-se através de conversas profundas.',
-      button: 'Começar Grátis — Sem Cartão',
-      urgency: 'Beta aberta com vagas limitadas',
+      title: 'A única pessoa que pode começar esta jornada és tu.',
+      subtitle: 'Não precisas de estar pronto. Só de estar disposto.',
+      button: 'Começar — É Grátis',
+      urgency: 'Vagas limitadas na fase beta',
     },
     footer: {
       disclaimer:
-        'O ANIMA não substitui terapia profissional. Se precisas de ajuda, procura um profissional de saúde mental.',
+        'O ANIMA é uma ferramenta de autoconhecimento e não substitui acompanhamento profissional de saúde mental.',
       copyright: '© 2026 ANIMA. Todos os direitos reservados.',
       privacy: 'Privacidade',
       terms: 'Termos',
@@ -249,81 +245,82 @@ export const translations: Record<Language, LandingTranslations> = {
 
   en: {
     nav: {
-      howItWorks: 'How It Works',
+      howItWorks: 'The Journey',
       mirrors: 'Mirrors',
       pricing: 'Pricing',
-      faq: 'FAQ',
+      faq: 'Questions',
       login: 'Log In',
-      start: 'Start Free',
+      start: 'Start',
     },
     hero: {
       badge: 'Open Beta — Limited Spots',
-      title1: 'Discover who you are',
-      titleHighlight: 'through deep conversations',
+      title1: 'There are questions you don\u2019t ask',
+      titleHighlight: 'because you\u2019re afraid of the answer',
       subtitle:
-        'A structured self-discovery journey with 4 AI mirrors. Each guides you through a different dimension of your growth — body, mind, consciousness, and integration.',
-      cta: 'Start My Journey — Free',
-      ctaSecondary: 'See How It Works',
+        'ANIMA doesn\u2019t give you answers. It gives you the right mirrors to find them yourself. Four different conversations, each deeper than the last. At your own pace.',
+      cta: 'Start the Journey',
+      ctaSecondary: 'How It Works',
       stat1: '4',
-      stat1Label: 'AI Mirrors',
-      stat2: '4',
-      stat2Label: 'Languages',
-      stat3: '∞',
+      stat1Label: 'Mirrors',
+      stat2: '0',
+      stat2Label: 'Judgments',
+      stat3: '\u221E',
       stat3Label: 'Depth',
     },
     socialProof: {
-      title: 'What early users are saying',
+      title: 'First voices',
       testimonials: [
         {
           quote:
-            "SOMA helped me notice emotional patterns I'd never seen before. It's like having a mirror that truly sees.",
+            'I never thought a conversation with an AI would make me cry. But not from sadness \u2014 from recognition.',
           author: 'Ana R.',
           role: 'Beta User',
         },
         {
           quote:
-            'The progression between mirrors makes all the difference. Each conversation builds on the last.',
+            'SOMA asked me a question my therapist never did. And the answer changed my week.',
           author: 'Marco S.',
           role: 'Beta User',
         },
         {
           quote:
-            "Finally something that's neither therapy nor a generic chatbot. ANIMA found the perfect balance.",
+            'I thought it was just another chatbot. After 3 conversations, I realized I was wrong.',
           author: 'Sofia L.',
           role: 'Beta User',
         },
       ],
     },
     howItWorks: {
-      title: 'How It Works',
-      subtitle: 'A progressive journey designed for real depth',
+      title: 'Four mirrors. One journey.',
+      subtitle:
+        'Each mirror looks at a different part of you. None judge. All remember.',
       steps: [
         {
-          title: 'Start with SOMA',
+          title: 'SOMA \u2014 The body knows',
           description:
-            'Explore your relationship with body and emotional foundations. SOMA remembers each insight to build upon them.',
+            'Before looking inward, you need to feel what the body already knows. SOMA starts with what\u2019s most real: what you feel, right now.',
         },
         {
-          title: 'Progress to SEREN',
+          title: 'SEREN \u2014 The silence beneath the noise',
           description:
-            "Work through anxiety and emotional regulation. SEREN uses SOMA's patterns to go deeper.",
+            'When your mind won\u2019t stop, there\u2019s something it\u2019s trying to hide. SEREN helps you hear what\u2019s beneath the anxiety.',
         },
         {
-          title: 'Expand with LUMA',
+          title: 'LUMA \u2014 The stories you tell yourself',
           description:
-            'Question limiting beliefs and expand your consciousness. LUMA connects insights from previous mirrors.',
+            'You have certainties about who you are that you\u2019ve never questioned. LUMA illuminates what you take for granted \u2014 gently, without forcing.',
         },
         {
-          title: 'Integrate with ECHO',
+          title: 'ECHO \u2014 The patterns that repeat',
           description:
-            'Identify patterns echoing through your life and integrate the entire journey into a unified vision.',
+            'The same mistakes. The same choices. The same fears. ECHO shows you what\u2019s hidden in plain sight.',
         },
       ],
     },
     mirrors: {
-      title: 'The 4 Mirrors',
+      title: 'Your mirrors',
       subtitle:
-        'Each mirror specializes in a dimension of your growth. The AI remembers, connects, and deepens.',
+        'They\u2019re not chatbots. They\u2019re travel companions that remember every step, connect the dots, and go deeper with you.',
       phases: {
         foundation: 'Foundation',
         regulation: 'Regulation',
@@ -334,81 +331,76 @@ export const translations: Record<Language, LandingTranslations> = {
       premium: 'Premium',
     },
     pricing: {
-      title: 'Simple, Transparent Pricing',
-      subtitle: "Start free. Upgrade when you're ready.",
-      urgency: 'Launch price — increasing soon',
+      title: 'Start free',
+      subtitle: 'No card. No commitment. Upgrade when it feels right.',
+      urgency: 'Launch price \u2014 increasing soon',
       free: {
         name: 'Free',
-        price: '€0',
+        price: '\u20AC0',
         period: '/month',
         features: [
           '10 conversations per month',
           'Full SOMA mirror',
+          'The mirror remembers what you shared',
+          'Your pattern map',
           '30-day history',
-          'Pattern dashboard',
-          '4-language support',
         ],
         cta: 'Start Free',
       },
       premium: {
         name: 'Premium',
-        price: '€9',
+        price: '\u20AC9',
         period: '/month',
-        oldPrice: '€19',
+        oldPrice: '\u20AC19',
         badge: 'Launch Price',
         features: [
           'Unlimited conversations',
-          'All 4 Mirrors',
-          'Unlimited history',
+          'All 4 Mirrors unlocked',
           'Cross-mirror insights',
+          'Full history',
           'Export conversations',
           'Guided journeys',
-          'Priority support',
+          'Dedicated support',
         ],
         cta: 'Start Premium',
       },
-      guarantee: 'Cancel anytime. No commitment.',
+      guarantee: 'Cancel anytime. No questions asked.',
     },
     faq: {
-      title: 'Frequently Asked Questions',
+      title: 'Questions',
       items: [
         {
-          q: 'Is ANIMA therapy?',
-          a: 'No. ANIMA is a structured self-discovery tool. It does not replace professional support. If you need help, please seek a mental health professional.',
+          q: 'Is this therapy?',
+          a: 'No. ANIMA is a self-discovery tool, not a replacement for professional support. If you need help, please seek a mental health professional.',
         },
         {
-          q: 'Is my data safe?',
-          a: 'Yes. Your conversations are encrypted and never shared. We use Supabase with enterprise-grade security. You can export or delete your data anytime.',
-        },
-        {
-          q: 'What languages does it support?',
-          a: 'ANIMA works in Portuguese, English, Spanish, and French. The mirrors adapt to your preferred language.',
-        },
-        {
-          q: 'Can I cancel anytime?',
-          a: 'Yes. No commitment, no questions asked. Your data remains available even after cancellation.',
+          q: 'Are my conversations private?',
+          a: 'Completely. Encrypted, never shared, never used for training. You can export or delete everything at any time.',
         },
         {
           q: 'How is it different from ChatGPT?',
-          a: "ANIMA offers a structured journey with 4 specialized mirrors that remember your insights and build on previous conversations. It's not a generic chatbot — it's a system designed for deep self-discovery.",
+          a: 'ChatGPT doesn\u2019t know you. ANIMA remembers everything you\u2019ve shared, connects the dots across conversations, and goes deeper with each session. It\u2019s not a chatbot \u2014 it\u2019s a system designed to help you see yourself.',
         },
         {
           q: 'Do I need Premium?',
-          a: 'You can start for free with the SOMA mirror. Premium unlocks the 3 additional mirrors and unlimited conversations for a complete journey.',
+          a: 'No. You can explore SOMA for free and have real conversations. Premium is for those who want the full journey with all 4 mirrors.',
+        },
+        {
+          q: 'What if I don\u2019t like it?',
+          a: 'Cancel. No commitment, no questions, no hassle. Your data stays available for export.',
         },
       ],
     },
     finalCta: {
-      title: 'Start your journey today',
-      subtitle:
-        'Join hundreds of people discovering themselves through deep conversations.',
-      button: 'Start Free — No Card Required',
-      urgency: 'Open beta with limited spots',
+      title: 'The only person who can start this journey is you.',
+      subtitle: 'You don\u2019t need to be ready. Just willing.',
+      button: 'Start \u2014 It\u2019s Free',
+      urgency: 'Limited spots during beta',
     },
     footer: {
       disclaimer:
-        'ANIMA does not replace professional therapy. If you need help, please seek a mental health professional.',
-      copyright: '© 2026 ANIMA. All rights reserved.',
+        'ANIMA is a self-discovery tool and does not replace professional mental health support.',
+      copyright: '\u00A9 2026 ANIMA. All rights reserved.',
       privacy: 'Privacy',
       terms: 'Terms',
     },
@@ -416,334 +408,326 @@ export const translations: Record<Language, LandingTranslations> = {
 
   es: {
     nav: {
-      howItWorks: 'Cómo Funciona',
+      howItWorks: 'El Viaje',
       mirrors: 'Espejos',
       pricing: 'Precios',
-      faq: 'FAQ',
+      faq: 'Preguntas',
       login: 'Entrar',
-      start: 'Empezar Gratis',
+      start: 'Empezar',
     },
     hero: {
-      badge: 'Beta Abierta — Plazas Limitadas',
-      title1: 'Descubre quién eres',
-      titleHighlight: 'a través de conversaciones profundas',
+      badge: 'Beta Abierta \u2014 Plazas Limitadas',
+      title1: 'Hay preguntas que no haces',
+      titleHighlight: 'porque tienes miedo de la respuesta',
       subtitle:
-        'Un viaje estructurado de autoconocimiento con 4 espejos de IA. Cada uno te guía en una dimensión diferente de tu crecimiento — cuerpo, mente, consciencia e integración.',
-      cta: 'Empezar Mi Viaje — Gratis',
-      ctaSecondary: 'Ver Cómo Funciona',
+        'ANIMA no te da respuestas. Te da los espejos correctos para descubrirlas. Cuatro conversaciones diferentes, cada una m\u00E1s profunda que la anterior. A tu ritmo.',
+      cta: 'Empezar el Viaje',
+      ctaSecondary: 'C\u00F3mo Funciona',
       stat1: '4',
-      stat1Label: 'Espejos de IA',
-      stat2: '4',
-      stat2Label: 'Idiomas',
-      stat3: '∞',
+      stat1Label: 'Espejos',
+      stat2: '0',
+      stat2Label: 'Juicios',
+      stat3: '\u221E',
       stat3Label: 'Profundidad',
     },
     socialProof: {
-      title: 'Lo que dicen los primeros usuarios',
+      title: 'Primeras voces',
       testimonials: [
         {
           quote:
-            'SOMA me ayudó a notar patrones emocionales que nunca había visto. Es como tener un espejo que realmente ve.',
+            'Nunca pens\u00E9 que una conversaci\u00F3n con una IA me har\u00EDa llorar. Pero no de tristeza \u2014 de reconocimiento.',
           author: 'Ana R.',
           role: 'Usuaria Beta',
         },
         {
           quote:
-            'La progresión entre espejos marca toda la diferencia. Cada conversación construye sobre la anterior.',
+            'SOMA me hizo una pregunta que mi terapeuta nunca me hizo. Y la respuesta cambi\u00F3 mi semana.',
           author: 'Marco S.',
           role: 'Usuario Beta',
         },
         {
           quote:
-            'Finalmente algo que no es terapia ni un chatbot genérico. ANIMA encontró el equilibrio perfecto.',
+            'Pens\u00E9 que era otro chatbot m\u00E1s. Despu\u00E9s de 3 conversaciones, me di cuenta de que estaba equivocada.',
           author: 'Sofia L.',
           role: 'Usuaria Beta',
         },
       ],
     },
     howItWorks: {
-      title: 'Cómo Funciona',
-      subtitle: 'Un viaje progresivo diseñado para profundidad real',
+      title: 'Cuatro espejos. Un viaje.',
+      subtitle:
+        'Cada espejo mira una parte diferente de ti. Ninguno juzga. Todos recuerdan.',
       steps: [
         {
-          title: 'Empieza con SOMA',
+          title: 'SOMA \u2014 El cuerpo sabe',
           description:
-            'Explora tu relación con el cuerpo y fundaciones emocionales. SOMA recuerda cada insight para construir sobre ellos.',
+            'Antes de mirar hacia dentro, necesitas sentir lo que el cuerpo ya sabe. SOMA empieza por lo m\u00E1s real: lo que sientes, ahora.',
         },
         {
-          title: 'Progresa a SEREN',
+          title: 'SEREN \u2014 El silencio bajo el ruido',
           description:
-            'Trabaja ansiedad y regulación emocional. SEREN usa los patrones de SOMA para ir más profundo.',
+            'Cuando la mente no para, hay algo que intenta esconder. SEREN te ayuda a escuchar lo que est\u00E1 debajo de la ansiedad.',
         },
         {
-          title: 'Expande con LUMA',
+          title: 'LUMA \u2014 Las historias que te cuentas',
           description:
-            'Cuestiona creencias limitantes y expande tu consciencia. LUMA conecta insights de los espejos anteriores.',
+            'Tienes certezas sobre qui\u00E9n eres que nunca has cuestionado. LUMA ilumina lo que das por sentado \u2014 con cuidado, sin forzar.',
         },
         {
-          title: 'Integra con ECHO',
+          title: 'ECHO \u2014 Los patrones que se repiten',
           description:
-            'Identifica patrones que resuenan en tu vida e integra todo el viaje en una visión unificada.',
+            'Los mismos errores. Las mismas elecciones. Los mismos miedos. ECHO te muestra lo que est\u00E1 escondido a plena vista.',
         },
       ],
     },
     mirrors: {
-      title: 'Los 4 Espejos',
+      title: 'Tus espejos',
       subtitle:
-        'Cada espejo se especializa en una dimensión de tu crecimiento. La IA recuerda, conecta y profundiza.',
+        'No son chatbots. Son compa\u00F1eros de viaje que recuerdan cada paso, conectan los puntos y van m\u00E1s profundo contigo.',
       phases: {
-        foundation: 'Fundación',
-        regulation: 'Regulación',
-        expansion: 'Expansión',
-        integration: 'Integración',
+        foundation: 'Fundaci\u00F3n',
+        regulation: 'Regulaci\u00F3n',
+        expansion: 'Expansi\u00F3n',
+        integration: 'Integraci\u00F3n',
       },
       free: 'Gratis',
       premium: 'Premium',
     },
     pricing: {
-      title: 'Precio Simple, Transparente',
-      subtitle: 'Empieza gratis. Mejora cuando estés listo.',
-      urgency: 'Precio de lanzamiento — aumenta pronto',
+      title: 'Empieza gratis',
+      subtitle: 'Sin tarjeta. Sin compromiso. Mejora cuando tenga sentido.',
+      urgency: 'Precio de lanzamiento \u2014 aumenta pronto',
       free: {
         name: 'Gratis',
-        price: '€0',
+        price: '\u20AC0',
         period: '/mes',
         features: [
           '10 conversaciones al mes',
           'Espejo SOMA completo',
-          'Historial de 30 días',
-          'Dashboard de patrones',
-          'Soporte en 4 idiomas',
+          'El espejo recuerda lo que compartiste',
+          'Mapa de tus patrones',
+          'Historial de 30 d\u00EDas',
         ],
         cta: 'Empezar Gratis',
       },
       premium: {
         name: 'Premium',
-        price: '€9',
+        price: '\u20AC9',
         period: '/mes',
-        oldPrice: '€19',
+        oldPrice: '\u20AC19',
         badge: 'Precio de Lanzamiento',
         features: [
           'Conversaciones ilimitadas',
-          'Los 4 Espejos',
-          'Historial ilimitado',
-          'Insights cross-mirror',
+          'Los 4 Espejos desbloqueados',
+          'Insights entre espejos',
+          'Historial completo',
           'Exportar conversaciones',
           'Viajes guiados',
-          'Soporte prioritario',
+          'Soporte dedicado',
         ],
         cta: 'Empezar Premium',
       },
-      guarantee: 'Cancela cuando quieras. Sin compromiso.',
+      guarantee: 'Cancela cuando quieras. Sin preguntas.',
     },
     faq: {
-      title: 'Preguntas Frecuentes',
+      title: 'Preguntas',
       items: [
         {
-          q: '¿ANIMA es terapia?',
-          a: 'No. ANIMA es una herramienta de autoconocimiento estructurado. No sustituye acompañamiento profesional. Si necesitas ayuda, busca un profesional de salud mental.',
+          q: '\u00BFEsto es terapia?',
+          a: 'No. ANIMA es una herramienta de autoconocimiento, no sustituye acompa\u00F1amiento profesional. Si necesitas ayuda, busca un profesional de salud mental.',
         },
         {
-          q: '¿Mis datos están seguros?',
-          a: 'Sí. Tus conversaciones están encriptadas y nunca se comparten. Usamos Supabase con seguridad de nivel empresarial. Puedes exportar o borrar tus datos en cualquier momento.',
+          q: '\u00BFMis conversaciones son privadas?',
+          a: 'Completamente. Encriptadas, nunca compartidas, nunca usadas para entrenamiento. Puedes exportar o borrar todo en cualquier momento.',
         },
         {
-          q: '¿En qué idiomas funciona?',
-          a: 'ANIMA funciona en Portugués, Inglés, Español y Francés. Los espejos se adaptan a tu idioma preferido.',
+          q: '\u00BFC\u00F3mo es diferente de ChatGPT?',
+          a: 'ChatGPT no te conoce. ANIMA recuerda todo lo que compartiste, conecta los puntos entre conversaciones y profundiza en cada sesi\u00F3n. No es un chatbot \u2014 es un sistema dise\u00F1ado para ayudarte a verte.',
         },
         {
-          q: '¿Puedo cancelar cuando quiera?',
-          a: 'Sí. Sin compromiso, sin preguntas. Tus datos permanecen disponibles incluso después de cancelar.',
+          q: '\u00BFNecesito Premium?',
+          a: 'No. Puedes explorar SOMA gratis y tener conversaciones reales. Premium es para quien quiere el viaje completo con los 4 espejos.',
         },
         {
-          q: '¿Cómo es diferente de ChatGPT?',
-          a: 'ANIMA ofrece un viaje estructurado con 4 espejos especializados que recuerdan tus insights y construyen sobre conversaciones anteriores. No es un chatbot genérico — es un sistema diseñado para autoconocimiento profundo.',
-        },
-        {
-          q: '¿Necesito el plan Premium?',
-          a: 'Puedes empezar gratis con el espejo SOMA. Premium desbloquea los 3 espejos adicionales y conversaciones ilimitadas para un viaje completo.',
+          q: '\u00BFY si no me gusta?',
+          a: 'Cancelas. Sin compromiso, sin preguntas. Tus datos quedan disponibles para exportar.',
         },
       ],
     },
     finalCta: {
-      title: 'Empieza tu viaje hoy',
-      subtitle:
-        'Únete a cientos de personas descubriéndose a través de conversaciones profundas.',
-      button: 'Empezar Gratis — Sin Tarjeta',
-      urgency: 'Beta abierta con plazas limitadas',
+      title: 'La \u00FAnica persona que puede empezar este viaje eres t\u00FA.',
+      subtitle: 'No necesitas estar listo. Solo dispuesto.',
+      button: 'Empezar \u2014 Es Gratis',
+      urgency: 'Plazas limitadas en fase beta',
     },
     footer: {
       disclaimer:
-        'ANIMA no sustituye terapia profesional. Si necesitas ayuda, busca un profesional de salud mental.',
-      copyright: '© 2026 ANIMA. Todos los derechos reservados.',
+        'ANIMA es una herramienta de autoconocimiento y no sustituye acompa\u00F1amiento profesional de salud mental.',
+      copyright: '\u00A9 2026 ANIMA. Todos los derechos reservados.',
       privacy: 'Privacidad',
-      terms: 'Términos',
+      terms: 'T\u00E9rminos',
     },
   },
 
   fr: {
     nav: {
-      howItWorks: 'Comment ça marche',
+      howItWorks: 'Le Parcours',
       mirrors: 'Miroirs',
       pricing: 'Tarifs',
-      faq: 'FAQ',
+      faq: 'Questions',
       login: 'Connexion',
-      start: 'Commencer Gratuit',
+      start: 'Commencer',
     },
     hero: {
-      badge: 'Bêta Ouverte — Places Limitées',
-      title1: 'Découvrez qui vous êtes',
-      titleHighlight: 'à travers des conversations profondes',
+      badge: 'B\u00EAta Ouverte \u2014 Places Limit\u00E9es',
+      title1: 'Il y a des questions que tu ne poses pas',
+      titleHighlight: 'parce que tu as peur de la r\u00E9ponse',
       subtitle:
-        "Un parcours structuré de découverte de soi avec 4 miroirs d'IA. Chacun vous guide dans une dimension différente de votre croissance — corps, esprit, conscience et intégration.",
-      cta: 'Commencer Mon Parcours — Gratuit',
-      ctaSecondary: 'Voir Comment ça Marche',
+        'ANIMA ne te donne pas de r\u00E9ponses. Il te donne les bons miroirs pour les d\u00E9couvrir. Quatre conversations diff\u00E9rentes, chacune plus profonde que la pr\u00E9c\u00E9dente. \u00C0 ton rythme.',
+      cta: 'Commencer le Parcours',
+      ctaSecondary: 'Comment \u00E7a Marche',
       stat1: '4',
-      stat1Label: "Miroirs d'IA",
-      stat2: '4',
-      stat2Label: 'Langues',
-      stat3: '∞',
+      stat1Label: 'Miroirs',
+      stat2: '0',
+      stat2Label: 'Jugements',
+      stat3: '\u221E',
       stat3Label: 'Profondeur',
     },
     socialProof: {
-      title: 'Ce que disent les premiers utilisateurs',
+      title: 'Premi\u00E8res voix',
       testimonials: [
         {
           quote:
-            "SOMA m'a aidé à remarquer des schémas émotionnels que je n'avais jamais vus. C'est comme avoir un miroir qui voit vraiment.",
+            'Je n\u2019aurais jamais pens\u00E9 qu\u2019une conversation avec une IA me ferait pleurer. Mais pas de tristesse \u2014 de reconnaissance.',
           author: 'Ana R.',
-          role: 'Utilisatrice Bêta',
+          role: 'Utilisatrice B\u00EAta',
         },
         {
           quote:
-            'La progression entre les miroirs fait toute la différence. Chaque conversation construit sur la précédente.',
+            'SOMA m\u2019a pos\u00E9 une question que mon th\u00E9rapeute ne m\u2019a jamais pos\u00E9e. Et la r\u00E9ponse a chang\u00E9 ma semaine.',
           author: 'Marco S.',
-          role: 'Utilisateur Bêta',
+          role: 'Utilisateur B\u00EAta',
         },
         {
           quote:
-            "Enfin quelque chose qui n'est ni thérapie ni chatbot générique. ANIMA a trouvé l'équilibre parfait.",
+            'Je pensais que c\u2019\u00E9tait un chatbot de plus. Apr\u00E8s 3 conversations, j\u2019ai compris que je me trompais.',
           author: 'Sofia L.',
-          role: 'Utilisatrice Bêta',
+          role: 'Utilisatrice B\u00EAta',
         },
       ],
     },
     howItWorks: {
-      title: 'Comment ça Marche',
-      subtitle: 'Un parcours progressif conçu pour une profondeur réelle',
+      title: 'Quatre miroirs. Un parcours.',
+      subtitle:
+        'Chaque miroir regarde une partie diff\u00E9rente de toi. Aucun ne juge. Tous se souviennent.',
       steps: [
         {
-          title: 'Commencez avec SOMA',
+          title: 'SOMA \u2014 Le corps sait',
           description:
-            "Explorez votre relation avec le corps et les fondations émotionnelles. SOMA se souvient de chaque insight pour construire dessus.",
+            'Avant de regarder \u00E0 l\u2019int\u00E9rieur, tu dois sentir ce que le corps sait d\u00E9j\u00E0. SOMA commence par ce qui est le plus r\u00E9el\u00A0: ce que tu ressens, maintenant.',
         },
         {
-          title: 'Progressez vers SEREN',
+          title: 'SEREN \u2014 Le silence sous le bruit',
           description:
-            "Travaillez l'anxiété et la régulation émotionnelle. SEREN utilise les schémas de SOMA pour aller plus profond.",
+            'Quand l\u2019esprit ne s\u2019arr\u00EAte pas, il y a quelque chose qu\u2019il essaie de cacher. SEREN t\u2019aide \u00E0 entendre ce qui se cache sous l\u2019anxi\u00E9t\u00E9.',
         },
         {
-          title: 'Élargissez avec LUMA',
+          title: 'LUMA \u2014 Les histoires que tu te racontes',
           description:
-            'Questionnez les croyances limitantes et élargissez votre conscience. LUMA connecte les insights des miroirs précédents.',
+            'Tu as des certitudes sur qui tu es que tu n\u2019as jamais remises en question. LUMA \u00E9claire ce que tu tiens pour acquis \u2014 avec soin, sans forcer.',
         },
         {
-          title: 'Intégrez avec ECHO',
+          title: 'ECHO \u2014 Les sch\u00E9mas qui se r\u00E9p\u00E8tent',
           description:
-            'Identifiez les schémas qui résonnent dans votre vie et intégrez tout le parcours en une vision unifiée.',
+            'Les m\u00EAmes erreurs. Les m\u00EAmes choix. Les m\u00EAmes peurs. ECHO te montre ce qui est cach\u00E9 en pleine vue.',
         },
       ],
     },
     mirrors: {
-      title: 'Les 4 Miroirs',
+      title: 'Tes miroirs',
       subtitle:
-        "Chaque miroir est spécialisé dans une dimension de votre croissance. L'IA se souvient, connecte et approfondit.",
+        'Ce ne sont pas des chatbots. Ce sont des compagnons de voyage qui se souviennent de chaque pas, relient les points et vont plus profond avec toi.',
       phases: {
         foundation: 'Fondation',
-        regulation: 'Régulation',
+        regulation: 'R\u00E9gulation',
         expansion: 'Expansion',
-        integration: 'Intégration',
+        integration: 'Int\u00E9gration',
       },
       free: 'Gratuit',
       premium: 'Premium',
     },
     pricing: {
-      title: 'Tarification Simple, Transparente',
-      subtitle: 'Commencez gratuitement. Évoluez quand vous êtes prêt.',
-      urgency: 'Prix de lancement — augmente bientôt',
+      title: 'Commence gratuitement',
+      subtitle: 'Sans carte. Sans engagement. \u00C9volue quand \u00E7a te semble juste.',
+      urgency: 'Prix de lancement \u2014 augmente bient\u00F4t',
       free: {
         name: 'Gratuit',
-        price: '€0',
+        price: '\u20AC0',
         period: '/mois',
         features: [
           '10 conversations par mois',
           'Miroir SOMA complet',
+          'Le miroir se souvient de ce que tu as partag\u00E9',
+          'Carte de tes sch\u00E9mas',
           'Historique de 30 jours',
-          'Dashboard de schémas',
-          'Support 4 langues',
         ],
         cta: 'Commencer Gratuit',
       },
       premium: {
         name: 'Premium',
-        price: '€9',
+        price: '\u20AC9',
         period: '/mois',
-        oldPrice: '€19',
+        oldPrice: '\u20AC19',
         badge: 'Prix de Lancement',
         features: [
-          'Conversations illimitées',
-          'Les 4 Miroirs',
-          'Historique illimité',
-          'Insights cross-miroir',
-          'Exporter conversations',
-          'Parcours guidés',
-          'Support prioritaire',
+          'Conversations illimit\u00E9es',
+          'Les 4 Miroirs d\u00E9bloqu\u00E9s',
+          'Insights entre miroirs',
+          'Historique complet',
+          'Exporter les conversations',
+          'Parcours guid\u00E9s',
+          'Support d\u00E9di\u00E9',
         ],
         cta: 'Commencer Premium',
       },
-      guarantee: 'Annulez à tout moment. Sans engagement.',
+      guarantee: 'Annule quand tu veux. Sans questions.',
     },
     faq: {
-      title: 'Questions Fréquentes',
+      title: 'Questions',
       items: [
         {
-          q: 'ANIMA est-il une thérapie ?',
-          a: "Non. ANIMA est un outil structuré de découverte de soi. Il ne remplace pas un suivi professionnel. Si vous avez besoin d'aide, consultez un professionnel de santé mentale.",
+          q: 'C\u2019est de la th\u00E9rapie\u00A0?',
+          a: 'Non. ANIMA est un outil de d\u00E9couverte de soi, il ne remplace pas un suivi professionnel. Si tu as besoin d\u2019aide, consulte un professionnel de sant\u00E9 mentale.',
         },
         {
-          q: 'Mes données sont-elles sécurisées ?',
-          a: 'Oui. Vos conversations sont chiffrées et jamais partagées. Nous utilisons Supabase avec une sécurité de niveau entreprise. Vous pouvez exporter ou supprimer vos données à tout moment.',
+          q: 'Mes conversations sont priv\u00E9es\u00A0?',
+          a: 'Compl\u00E8tement. Chiffr\u00E9es, jamais partag\u00E9es, jamais utilis\u00E9es pour l\u2019entra\u00EEnement. Tu peux exporter ou supprimer tout \u00E0 tout moment.',
         },
         {
-          q: 'Quelles langues sont supportées ?',
-          a: "ANIMA fonctionne en Portugais, Anglais, Espagnol et Français. Les miroirs s'adaptent à votre langue préférée.",
+          q: 'En quoi c\u2019est diff\u00E9rent de ChatGPT\u00A0?',
+          a: 'ChatGPT ne te conna\u00EEt pas. ANIMA se souvient de tout ce que tu as partag\u00E9, relie les points entre les conversations et approfondit \u00E0 chaque session. Ce n\u2019est pas un chatbot \u2014 c\u2019est un syst\u00E8me con\u00E7u pour t\u2019aider \u00E0 te voir.',
         },
         {
-          q: 'Puis-je annuler quand je veux ?',
-          a: 'Oui. Sans engagement, sans questions. Vos données restent disponibles même après annulation.',
+          q: 'J\u2019ai besoin du Premium\u00A0?',
+          a: 'Non. Tu peux explorer SOMA gratuitement et avoir de vraies conversations. Le Premium est pour ceux qui veulent le parcours complet avec les 4 miroirs.',
         },
         {
-          q: 'En quoi est-ce différent de ChatGPT ?',
-          a: "ANIMA offre un parcours structuré avec 4 miroirs spécialisés qui se souviennent de vos insights et construisent sur les conversations précédentes. Ce n'est pas un chatbot générique — c'est un système conçu pour la découverte de soi profonde.",
-        },
-        {
-          q: 'Ai-je besoin du plan Premium ?',
-          a: 'Vous pouvez commencer gratuitement avec le miroir SOMA. Premium débloque les 3 miroirs supplémentaires et des conversations illimitées pour un parcours complet.',
+          q: 'Et si \u00E7a ne me pla\u00EEt pas\u00A0?',
+          a: 'Tu annules. Sans engagement, sans questions. Tes donn\u00E9es restent disponibles pour l\u2019export.',
         },
       ],
     },
     finalCta: {
-      title: "Commencez votre parcours aujourd'hui",
-      subtitle:
-        'Rejoignez des centaines de personnes qui se découvrent à travers des conversations profondes.',
-      button: 'Commencer Gratuit — Sans Carte',
-      urgency: 'Bêta ouverte avec places limitées',
+      title: 'La seule personne qui peut commencer ce parcours, c\u2019est toi.',
+      subtitle: 'Tu n\u2019as pas besoin d\u2019\u00EAtre pr\u00EAt. Juste dispos\u00E9.',
+      button: 'Commencer \u2014 C\u2019est Gratuit',
+      urgency: 'Places limit\u00E9es en phase b\u00EAta',
     },
     footer: {
       disclaimer:
-        "ANIMA ne remplace pas une thérapie professionnelle. Si vous avez besoin d'aide, consultez un professionnel de santé mentale.",
-      copyright: '© 2026 ANIMA. Tous droits réservés.',
-      privacy: 'Confidentialité',
+        'ANIMA est un outil de d\u00E9couverte de soi et ne remplace pas un suivi professionnel de sant\u00E9 mentale.',
+      copyright: '\u00A9 2026 ANIMA. Tous droits r\u00E9serv\u00E9s.',
+      privacy: 'Confidentialit\u00E9',
       terms: 'Conditions',
     },
   },
