@@ -1,0 +1,27 @@
+[project]
+id = "anima"
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://animamirror.com"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+sender_name = "ANIMA"
+sender_email = "noreply@animamirror.com"
+
+[auth.email.template.confirmation]
+subject = "ANIMA - Confirma o teu email"
+content_path = "./templates/confirmation.html"
+
+[auth.email.template.magic_link]
+subject = "ANIMA - O teu link de acesso"
+content_path = "./templates/magic-link.html"
+
+[auth.email.template.invite]
+subject = "ANIMA - Foste convidado"
+content_path = "./templates/invite.html"
