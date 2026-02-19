@@ -131,6 +131,71 @@ export interface DailyUsage {
   total_tokens: number
 }
 
+// Travessia types
+export type SessionStatus = 'locked' | 'available' | 'in_progress' | 'completed'
+
+export interface MirrorSession {
+  id: string
+  mirror_slug: MirrorSlug
+  session_number: number
+  title_pt: string
+  title_en: string
+  title_es: string
+  title_fr: string
+  subtitle_pt: string
+  subtitle_en: string
+  subtitle_es: string
+  subtitle_fr: string
+  session_prompt: string
+  estimated_minutes: number
+  unlock_after: number | null
+}
+
+export interface UserSessionRecord {
+  id: string
+  user_id: string
+  mirror_slug: MirrorSlug
+  session_number: number
+  status: SessionStatus
+  started_at: string | null
+  completed_at: string | null
+  conversation_id: string | null
+  exit_insight: string | null
+  created_at: string
+}
+
+export interface UserStreak {
+  id: string
+  user_id: string
+  current_streak: number
+  longest_streak: number
+  last_session_date: string | null
+  updated_at: string
+}
+
+export interface MilestoneRecord {
+  id: string
+  trigger_type: string
+  trigger_value: string
+  title_pt: string
+  title_en: string
+  title_es: string
+  title_fr: string
+  description_pt: string
+  description_en: string
+  description_es: string
+  description_fr: string
+  mirror_slug: MirrorSlug | null
+}
+
+export interface UserMilestone {
+  id: string
+  user_id: string
+  milestone_id: string
+  unlocked_at: string
+  seen: boolean
+}
+
 // Database type for Supabase
 export interface Database {
   public: {
@@ -179,6 +244,31 @@ export interface Database {
         Row: DailyUsage
         Insert: Partial<DailyUsage> & { user_id: string }
         Update: Partial<DailyUsage>
+      }
+      mirror_sessions: {
+        Row: MirrorSession
+        Insert: Partial<MirrorSession> & { mirror_slug: string; session_number: number; title_pt: string; title_en: string; title_es: string; title_fr: string; subtitle_pt: string; subtitle_en: string; subtitle_es: string; subtitle_fr: string; session_prompt: string }
+        Update: Partial<MirrorSession>
+      }
+      user_sessions: {
+        Row: UserSessionRecord
+        Insert: Partial<UserSessionRecord> & { user_id: string; mirror_slug: string; session_number: number }
+        Update: Partial<UserSessionRecord>
+      }
+      user_streaks: {
+        Row: UserStreak
+        Insert: Partial<UserStreak> & { user_id: string }
+        Update: Partial<UserStreak>
+      }
+      milestones: {
+        Row: MilestoneRecord
+        Insert: Partial<MilestoneRecord> & { trigger_type: string; trigger_value: string; title_pt: string; title_en: string; title_es: string; title_fr: string; description_pt: string; description_en: string; description_es: string; description_fr: string }
+        Update: Partial<MilestoneRecord>
+      }
+      user_milestones: {
+        Row: UserMilestone
+        Insert: Partial<UserMilestone> & { user_id: string; milestone_id: string }
+        Update: Partial<UserMilestone>
       }
     }
   }
