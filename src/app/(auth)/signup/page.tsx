@@ -39,16 +39,16 @@ export default function SignupPage() {
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <div className="w-full max-w-sm space-y-6 text-center">
           <div className="text-4xl">✉️</div>
-          <h1 className="text-2xl font-bold">Check your email</h1>
+          <h1 className="text-2xl font-bold">Verifica o teu email</h1>
           <p className="text-muted-foreground">
-            We sent a magic link to <strong>{email}</strong>.
-            Click the link to create your account and start your journey.
+            Enviámos um magic link para <strong>{email}</strong>.
+            Clica no link para criar a tua conta e começar a tua jornada.
           </p>
           <button
             onClick={() => setSent(false)}
             className="text-sm text-muted-foreground hover:text-foreground underline"
           >
-            Use a different email
+            Usar outro email
           </button>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default function SignupPage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">ANIMA</h1>
           <p className="text-muted-foreground">
-            Begin your journey of self-discovery
+            Começa a tua jornada de autoconhecimento
           </p>
         </div>
 
@@ -90,21 +90,21 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
-            {loading ? 'Sending...' : 'Create Account'}
+            {loading ? 'A enviar...' : 'Criar Conta'}
           </button>
         </form>
 
         <div className="space-y-3">
           <div className="text-center text-xs text-muted-foreground space-y-1">
-            <p>Free: 10 conversations/month with SOMA</p>
-            <p>Premium: Unlimited with all 4 Mirrors</p>
+            <p>Grátis: 10 conversas/mês com SOMA</p>
+            <p>Premium: Ilimitado com os 4 Espelhos</p>
           </div>
         </div>
 
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
+          Já tens conta?{' '}
           <Link href="/login" className="font-medium text-foreground hover:underline">
-            Sign in
+            Entrar
           </Link>
         </p>
       </div>

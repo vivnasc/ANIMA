@@ -39,16 +39,16 @@ export default function LoginPage() {
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <div className="w-full max-w-sm space-y-6 text-center">
           <div className="text-4xl">✉️</div>
-          <h1 className="text-2xl font-bold">Check your email</h1>
+          <h1 className="text-2xl font-bold">Verifica o teu email</h1>
           <p className="text-muted-foreground">
-            We sent a magic link to <strong>{email}</strong>.
-            Click the link in the email to sign in.
+            Enviámos um magic link para <strong>{email}</strong>.
+            Clica no link no email para entrar.
           </p>
           <button
             onClick={() => setSent(false)}
             className="text-sm text-muted-foreground hover:text-foreground underline"
           >
-            Use a different email
+            Usar outro email
           </button>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default function LoginPage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">ANIMA</h1>
           <p className="text-muted-foreground">
-            Your journey of self-discovery begins here
+            A tua jornada de autoconhecimento começa aqui
           </p>
         </div>
 
@@ -90,14 +90,14 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
-            {loading ? 'Sending...' : 'Sign in with Magic Link'}
+            {loading ? 'A enviar...' : 'Entrar com Magic Link'}
           </button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
+          Ainda não tens conta?{' '}
           <Link href="/signup" className="font-medium text-foreground hover:underline">
-            Sign up
+            Criar conta
           </Link>
         </p>
       </div>

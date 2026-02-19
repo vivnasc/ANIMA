@@ -37,22 +37,22 @@ export default async function DashboardPage() {
   const lang = (userData?.language_preference || 'pt') as keyof typeof MIRRORS.soma.descriptions
 
   const phases = [
-    { name: 'Foundation', mirror: 'soma' as const, complete: journey.foundation_completed, current: journey.current_phase === 'foundation', conversations: journey.soma_conversations },
-    { name: 'Regulation', mirror: 'seren' as const, complete: journey.regulation_completed, current: journey.current_phase === 'regulation', conversations: journey.seren_conversations },
-    { name: 'Expansion', mirror: 'luma' as const, complete: journey.expansion_completed, current: journey.current_phase === 'expansion', conversations: journey.luma_conversations },
-    { name: 'Integration', mirror: 'echo' as const, complete: journey.integration_completed, current: journey.current_phase === 'integration', conversations: journey.echo_conversations }
+    { name: 'Fundação', mirror: 'soma' as const, complete: journey.foundation_completed, current: journey.current_phase === 'foundation', conversations: journey.soma_conversations },
+    { name: 'Regulação', mirror: 'seren' as const, complete: journey.regulation_completed, current: journey.current_phase === 'regulation', conversations: journey.seren_conversations },
+    { name: 'Expansão', mirror: 'luma' as const, complete: journey.expansion_completed, current: journey.current_phase === 'expansion', conversations: journey.luma_conversations },
+    { name: 'Integração', mirror: 'echo' as const, complete: journey.integration_completed, current: journey.current_phase === 'integration', conversations: journey.echo_conversations }
   ]
 
   return (
     <div className="container max-w-4xl py-8 px-4 space-y-8">
       {/* Welcome */}
       <div>
-        <h1 className="text-2xl font-bold">Your Journey</h1>
+        <h1 className="text-2xl font-bold">A Tua Jornada</h1>
         <p className="text-muted-foreground">
-          {journey.total_conversations} conversations across your journey
+          {journey.total_conversations} conversas na tua jornada
           {userData?.subscription_tier === 'free' && (
             <span className="text-xs ml-2 px-2 py-0.5 rounded-full bg-muted">
-              Free tier - {10 - (userData?.monthly_message_count || 0)} messages left this month
+              Plano grátis - {10 - (userData?.monthly_message_count || 0)} mensagens restantes este mês
             </span>
           )}
         </p>
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
       {/* Phase Progress */}
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-6">
-          Journey Progress
+          Progresso da Jornada
         </h2>
         <div className="flex items-center justify-between gap-1 sm:gap-2">
           {phases.map((phase, i) => {
@@ -111,7 +111,7 @@ export default async function DashboardPage() {
       {suggestion && (
         <div className="rounded-xl border border-border bg-card p-6">
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-            Suggested Next Step
+            Próximo Passo Sugerido
           </h2>
           <p className="text-sm mb-4">{suggestion.message}</p>
           {(suggestion.mirror || suggestion.suggestedMirror) && (
@@ -123,7 +123,7 @@ export default async function DashboardPage() {
               }}
             >
               {MIRRORS[(suggestion.mirror || suggestion.suggestedMirror) as keyof typeof MIRRORS]?.icon}{' '}
-              Start conversation
+              Iniciar conversa
             </Link>
           )}
         </div>
@@ -132,11 +132,11 @@ export default async function DashboardPage() {
       {/* Patterns */}
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-          Patterns Identified
+          Padrões Identificados
         </h2>
         {patterns.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            As you explore, patterns will emerge and appear here
+            À medida que exploras, padrões vão emergir e aparecer aqui
           </p>
         ) : (
           <div className="space-y-3">
@@ -181,7 +181,7 @@ export default async function DashboardPage() {
       {insights.length > 0 && (
         <div className="rounded-xl border border-border bg-card p-6">
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-            Recent Insights
+            Insights Recentes
           </h2>
           <div className="space-y-3">
             {insights.map((insight) => (
@@ -223,7 +223,7 @@ export default async function DashboardPage() {
       {/* Mirrors Quick Access */}
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-          All Mirrors
+          Todos os Espelhos
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {Object.values(MIRRORS).sort((a, b) => a.order - b.order).map((mirror) => (
