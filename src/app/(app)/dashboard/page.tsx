@@ -5,6 +5,7 @@ import { MIRRORS } from '@/lib/ai/mirrors'
 import { MILESTONES } from '@/lib/journey/constants'
 import { getSessionProgress, getNextAvailableSession, getMirrorSessionDefinitions } from '@/lib/journey/sessions'
 import { getStreak } from '@/lib/journey/streaks'
+import { DashboardActions } from '@/components/journey/dashboard-actions'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Language } from '@/types/database'
@@ -336,6 +337,12 @@ export default async function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* Actions: Export + Restart */}
+      <DashboardActions
+        language={lang}
+        journeyComplete={sessionProgress.completed >= 28}
+      />
 
       {/* Mirrors Quick Access */}
       <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>

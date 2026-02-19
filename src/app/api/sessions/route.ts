@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { completeSession, startSession } from '@/lib/journey/sessions'
 import { updateStreak } from '@/lib/journey/streaks'
 import { checkSessionMilestones, checkStreakMilestones, getUnseenMilestones } from '@/lib/journey/milestones'
+import { detectPatternsWithAI } from '@/lib/ai/pattern-detection'
 import type { MirrorSlug, Language } from '@/types/database'
 
 export async function POST(req: NextRequest) {
@@ -37,6 +38,19 @@ export async function POST(req: NextRequest) {
       // Check milestones
       await checkSessionMilestones(user.id, mirrorSlug, sessionNumber)
       await checkStreakMilestones(user.id, streak.current_streak)
+
+      // Run AI pattern detection on the full conversation (async, non-blocking)
+      if (conversationId) {
+        const { data: messages } = await supabase
+          .from('messages')
+          .select('role, content')
+          .eq('conversation_id', conversationId)
+          .order('created_at', { ascending: true })
+
+        if (messages && messages.length > 0) {
+          detectPatternsWithAI(user.id, messages, mirrorSlug, conversationId).catch(() => {})
+        }
+      }
 
       // Get unseen milestones to show
       const unseenMilestones = await getUnseenMilestones(user.id, language || 'pt')
