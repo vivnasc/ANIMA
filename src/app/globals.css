@@ -141,8 +141,8 @@
   50% { transform: translateY(-6px); }
 }
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(201, 169, 110, 0.15); }
-  50% { box-shadow: 0 0 40px rgba(201, 169, 110, 0.3); }
+  0%, 100% { box-shadow: 0 0 20px rgba(154, 123, 80, 0.10); }
+  50% { box-shadow: 0 0 40px rgba(154, 123, 80, 0.20); }
 }
 @keyframes ember-glow {
   0%, 100% { opacity: 0.4; filter: blur(60px); }
