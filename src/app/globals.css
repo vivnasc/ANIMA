@@ -131,30 +131,32 @@
   }
 }
 
-/* Landing page animations */
+/* Landing page animations — warm, organic, breathing */
 @keyframes breathe {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.05); }
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.03); }
 }
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-6px); }
 }
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(124, 138, 219, 0.2); }
-  50% { box-shadow: 0 0 40px rgba(124, 138, 219, 0.4); }
+  0%, 100% { box-shadow: 0 0 20px rgba(201, 169, 110, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(201, 169, 110, 0.3); }
 }
-@keyframes cta-shimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes ember-glow {
+  0%, 100% { opacity: 0.4; filter: blur(60px); }
+  50% { opacity: 0.6; filter: blur(80px); }
 }
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.animate-breathe { animation: breathe 8s ease-in-out infinite; }
+.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+.animate-ember { animation: ember-glow 6s ease-in-out infinite; }
+
+/* Landing typography */
+.font-heading {
+  font-family: var(--font-playfair), Georgia, 'Times New Roman', serif;
 }
-.animate-breathe { animation: breathe 6s ease-in-out infinite; }
-.animate-float { animation: float 4s ease-in-out infinite; }
-.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
-.animate-cta-shimmer { animation: cta-shimmer 3s ease infinite; background-size: 200% 200%; }
-.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+.font-body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
