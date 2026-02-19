@@ -14,10 +14,10 @@ export default async function SettingsPage() {
     .single()
 
   return (
-    <div className="container max-w-2xl py-8 px-4 space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold">Definições</h1>
-        <p className="text-muted-foreground">Gere a tua conta e subscrição</p>
+    <div className="max-w-2xl mx-auto py-8 px-4 md:px-8 space-y-8">
+      <div className="pt-8 md:pt-0">
+        <h1 className="text-2xl md:text-3xl font-heading font-semibold" style={{ color: '#2a2520' }}>Definições</h1>
+        <p style={{ color: '#7a746b' }}>Gere a tua conta e subscrição</p>
       </div>
 
       <SettingsForm

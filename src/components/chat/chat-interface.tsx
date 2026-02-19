@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import type { MirrorConfig } from '@/lib/ai/mirrors'
 import type { Language, JourneyPhase } from '@/types/database'
@@ -84,7 +85,6 @@ export function ChatInterface({
     setInput('')
     setIsLoading(true)
 
-    // Create assistant placeholder
     const assistantId = crypto.randomUUID()
     setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: '' }])
 
@@ -140,8 +140,6 @@ export function ChatInterface({
 
                 if (data.conversationId && !conversationId) {
                   setConversationId(data.conversationId)
-
-                  // Add to conversations list
                   setConversations(prev => [{
                     id: data.conversationId,
                     title: userMessage.content.substring(0, 80),
@@ -180,25 +178,31 @@ export function ChatInterface({
     <div className="flex h-full">
       {/* Conversation History Sidebar - Mobile */}
       {showHistory && (
-        <div className="absolute inset-0 z-50 bg-background/80 md:hidden" onClick={() => setShowHistory(false)}>
-          <div className="w-72 h-full bg-card border-r border-border p-4" onClick={e => e.stopPropagation()}>
+        <div className="absolute inset-0 z-50 bg-black/40 md:hidden" onClick={() => setShowHistory(false)}>
+          <div
+            className="w-72 h-full p-4 overflow-y-auto"
+            style={{ backgroundColor: '#f0ece6' }}
+            onClick={e => e.stopPropagation()}
+          >
             <ConversationList
               conversations={conversations}
               activeId={conversationId}
               onSelect={loadConversation}
               onNew={startNewConversation}
+              mirrorColor={mirror.color}
             />
           </div>
         </div>
       )}
 
       {/* Conversation History - Desktop */}
-      <div className="hidden md:block w-72 border-r border-border p-4 overflow-y-auto">
+      <div className="hidden md:block w-72 p-4 overflow-y-auto" style={{ backgroundColor: '#f0ece6', borderRight: '1px solid #ccc7bc' }}>
         <ConversationList
           conversations={conversations}
           activeId={conversationId}
           onSelect={loadConversation}
           onNew={startNewConversation}
+          mirrorColor={mirror.color}
         />
       </div>
 
@@ -206,21 +210,26 @@ export function ChatInterface({
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <div
-          className="flex items-center gap-3 px-4 py-3 border-b border-border"
-          style={{ borderBottomColor: `${mirror.color}30` }}
+          className="flex items-center gap-3 px-4 py-3"
+          style={{ borderBottom: `2px solid ${mirror.color}25`, backgroundColor: '#f0ece6' }}
         >
           <button
-            className="md:hidden p-1 rounded hover:bg-muted"
+            className="md:hidden p-1.5 rounded-lg"
+            style={{ color: '#7a746b' }}
             onClick={() => setShowHistory(!showHistory)}
           >
-            ☰
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
           </button>
-          <span className="text-2xl">{mirror.icon}</span>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: `${mirror.color}15` }}>
+            <Image src={mirror.logo} alt={mirror.name} width={28} height={28} className="rounded-full" />
+          </div>
           <div>
-            <h1 className="font-semibold" style={{ color: mirror.color }}>
+            <h1 className="font-heading font-semibold" style={{ color: mirror.color }}>
               {mirror.name}
             </h1>
-            <p className="text-xs text-muted-foreground">{description}</p>
+            <p className="text-xs" style={{ color: '#7a746b' }}>{description}</p>
           </div>
         </div>
 
@@ -229,12 +238,14 @@ export function ChatInterface({
           {messages.length === 0 && (
             <div className="flex-1 flex items-center justify-center min-h-[60vh]">
               <div className="text-center space-y-4 max-w-md">
-                <div className="text-6xl">{mirror.icon}</div>
-                <h2 className="text-xl font-semibold" style={{ color: mirror.color }}>
+                <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center overflow-hidden" style={{ backgroundColor: `${mirror.color}12` }}>
+                  <Image src={mirror.logo} alt={mirror.name} width={56} height={56} className="rounded-full" />
+                </div>
+                <h2 className="text-xl font-heading font-semibold" style={{ color: mirror.color }}>
                   {mirror.name}
                 </h2>
-                <p className="text-muted-foreground">{description}</p>
-                <p className="text-sm text-muted-foreground">
+                <p style={{ color: '#7a746b' }}>{description}</p>
+                <p className="text-sm" style={{ color: '#9a7b50' }}>
                   {language === 'pt' ? 'Começa quando estiveres pronto/a...' :
                    language === 'fr' ? 'Commencez quand vous êtes prêt(e)...' :
                    language === 'es' ? 'Comienza cuando estés listo/a...' :
@@ -252,24 +263,32 @@ export function ChatInterface({
                 message.role === 'user' ? "ml-auto flex-row-reverse" : ""
               )}
             >
-              <div className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm",
-                message.role === 'user'
-                  ? "bg-primary text-primary-foreground"
-                  : ""
-              )}
-              style={message.role === 'assistant' ? { backgroundColor: `${mirror.color}20`, color: mirror.color } : {}}
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm overflow-hidden"
+                style={
+                  message.role === 'user'
+                    ? { backgroundColor: '#9a7b50', color: '#fff' }
+                    : { backgroundColor: `${mirror.color}15` }
+                }
               >
-                {message.role === 'user' ? '👤' : mirror.icon}
+                {message.role === 'user' ? (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                  </svg>
+                ) : (
+                  <Image src={mirror.logo} alt={mirror.name} width={20} height={20} className="rounded-full" />
+                )}
               </div>
-              <div className={cn(
-                "rounded-2xl px-4 py-2.5 text-sm leading-relaxed max-w-[85%]",
-                message.role === 'user'
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted"
-              )}>
+              <div
+                className="rounded-2xl px-4 py-2.5 text-sm leading-relaxed max-w-[85%]"
+                style={
+                  message.role === 'user'
+                    ? { backgroundColor: '#2a2520', color: '#ede9e3' }
+                    : { backgroundColor: '#f0ece6', color: '#2a2520' }
+                }
+              >
                 {message.role === 'assistant' ? (
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                  <div className="prose prose-sm max-w-none" style={{ color: '#2a2520' }}>
                     <ReactMarkdown>{message.content || '...'}</ReactMarkdown>
                   </div>
                 ) : (
@@ -282,16 +301,16 @@ export function ChatInterface({
           {isLoading && messages[messages.length - 1]?.content === '' && (
             <div className="flex gap-3">
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
-                style={{ backgroundColor: `${mirror.color}20`, color: mirror.color }}
+                className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden"
+                style={{ backgroundColor: `${mirror.color}15` }}
               >
-                {mirror.icon}
+                <Image src={mirror.logo} alt={mirror.name} width={20} height={20} className="rounded-full" />
               </div>
-              <div className="bg-muted rounded-2xl px-4 py-2.5">
+              <div className="rounded-2xl px-4 py-2.5" style={{ backgroundColor: '#f0ece6' }}>
                 <div className="flex gap-1">
-                  <span className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: `${mirror.color}60`, animationDelay: '0ms' }} />
+                  <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: `${mirror.color}60`, animationDelay: '150ms' }} />
+                  <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: `${mirror.color}60`, animationDelay: '300ms' }} />
                 </div>
               </div>
             </div>
@@ -301,7 +320,7 @@ export function ChatInterface({
         </div>
 
         {/* Input */}
-        <form onSubmit={handleSubmit} className="p-4 border-t border-border">
+        <form onSubmit={handleSubmit} className="p-4" style={{ borderTop: '1px solid #ccc7bc' }}>
           <div className="flex gap-2 max-w-3xl mx-auto">
             <textarea
               ref={inputRef}
@@ -320,16 +339,23 @@ export function ChatInterface({
                 'Type your message...'
               }
               rows={1}
-              className="flex-1 resize-none rounded-xl border border-input bg-background px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring min-h-[42px] max-h-[120px]"
-              style={{ overflow: 'auto' }}
+              className="flex-1 resize-none rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 min-h-[42px] max-h-[120px]"
+              style={{
+                backgroundColor: '#f0ece6',
+                border: '1px solid #ccc7bc',
+                color: '#2a2520',
+                overflow: 'auto',
+              }}
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="shrink-0 rounded-xl px-4 py-2.5 text-sm font-medium text-white disabled:opacity-50 transition-colors"
+              className="shrink-0 rounded-xl px-4 py-2.5 text-sm font-medium text-white disabled:opacity-50 transition-all hover:opacity-90"
               style={{ backgroundColor: mirror.color }}
             >
-              {isLoading ? '...' : '→'}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22,2 15,22 11,13 2,9" />
+              </svg>
             </button>
           </div>
         </form>
@@ -342,18 +368,21 @@ function ConversationList({
   conversations,
   activeId,
   onSelect,
-  onNew
+  onNew,
+  mirrorColor
 }: {
   conversations: ConversationSummary[]
   activeId: string | null
   onSelect: (id: string) => void
   onNew: () => void
+  mirrorColor: string
 }) {
   return (
     <div className="space-y-2">
       <button
         onClick={onNew}
-        className="w-full rounded-lg border border-dashed border-border px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+        className="w-full rounded-xl px-3 py-2.5 text-sm font-medium transition-colors"
+        style={{ border: `1px dashed ${mirrorColor}40`, color: mirrorColor }}
       >
         + Nova conversa
       </button>
@@ -363,21 +392,23 @@ function ConversationList({
           key={conv.id}
           onClick={() => onSelect(conv.id)}
           className={cn(
-            "w-full text-left rounded-lg px-3 py-2 text-sm transition-colors",
-            conv.id === activeId
-              ? "bg-muted font-medium"
-              : "hover:bg-muted/50 text-muted-foreground"
+            "w-full text-left rounded-xl px-3 py-2.5 text-sm transition-colors",
+            conv.id === activeId ? "font-medium" : ""
           )}
+          style={{
+            backgroundColor: conv.id === activeId ? '#e8e3da' : undefined,
+            color: conv.id === activeId ? '#2a2520' : '#7a746b',
+          }}
         >
           <p className="truncate">{conv.title || 'Nova conversa'}</p>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-xs mt-0.5" style={{ color: '#9a947b' }}>
             {conv.message_count} mensagens
           </p>
         </button>
       ))}
 
       {conversations.length === 0 && (
-        <p className="text-xs text-muted-foreground text-center py-4">
+        <p className="text-xs text-center py-4" style={{ color: '#7a746b' }}>
           Ainda sem conversas
         </p>
       )}

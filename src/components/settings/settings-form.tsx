@@ -39,34 +39,36 @@ export function SettingsForm({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Account */}
-      <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-        <h2 className="font-semibold">Conta</h2>
-        <div className="space-y-2">
-          <label className="text-sm text-muted-foreground">Email</label>
-          <p className="text-sm font-medium">{email}</p>
+      <div className="rounded-2xl p-6 space-y-4" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
+        <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9a7b50' }}>Conta</h2>
+        <div className="space-y-1">
+          <label className="text-sm" style={{ color: '#7a746b' }}>Email</label>
+          <p className="text-sm font-medium" style={{ color: '#2a2520' }}>{email}</p>
         </div>
       </div>
 
       {/* Language */}
-      <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-        <h2 className="font-semibold">Idioma</h2>
+      <div className="rounded-2xl p-6 space-y-4" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
+        <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9a7b50' }}>Idioma</h2>
         <div className="flex items-center gap-3">
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value as Language)}
-            className="rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
+            style={{ backgroundColor: '#fffcf8', border: '1px solid #ccc7bc', color: '#2a2520' }}
           >
-            <option value="pt">Português</option>
+            <option value="pt">Portugues</option>
             <option value="en">English</option>
-            <option value="fr">Français</option>
-            <option value="es">Español</option>
+            <option value="fr">Francais</option>
+            <option value="es">Espanol</option>
           </select>
           <button
             onClick={handleSaveLanguage}
             disabled={saving}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+            className="rounded-xl px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50 transition-all hover:opacity-90"
+            style={{ backgroundColor: '#9a7b50' }}
           >
             {saving ? 'A guardar...' : saved ? 'Guardado!' : 'Guardar'}
           </button>
@@ -74,32 +76,35 @@ export function SettingsForm({
       </div>
 
       {/* Subscription */}
-      <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-        <h2 className="font-semibold">Subscrição</h2>
+      <div className="rounded-2xl p-6 space-y-4" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
+        <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9a7b50' }}>Subscricao</h2>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <span className={`text-sm px-3 py-1 rounded-full font-medium ${
-              subscriptionTier === 'premium'
-                ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300'
-                : 'bg-muted text-muted-foreground'
-            }`}>
+            <span
+              className="text-sm px-3 py-1 rounded-full font-medium"
+              style={
+                subscriptionTier === 'premium'
+                  ? { backgroundColor: '#9a7b5020', color: '#9a7b50' }
+                  : { backgroundColor: '#e8e3da', color: '#7a746b' }
+              }
+            >
               {subscriptionTier === 'premium' ? 'Premium' : 'Free'}
             </span>
             {subscriptionTier === 'premium' && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs" style={{ color: '#7a746b' }}>
                 Status: {subscriptionStatus}
               </span>
             )}
           </div>
 
           {subscriptionTier === 'free' ? (
-            <div className="space-y-3">
-              <div className="text-sm space-y-1">
-                <p className="font-medium">Upgrade para Premium - 19€/mês</p>
-                <ul className="text-muted-foreground space-y-1">
+            <div className="space-y-4">
+              <div className="text-sm space-y-2">
+                <p className="font-medium" style={{ color: '#2a2520' }}>Upgrade para Premium — 19EUR/mes</p>
+                <ul className="space-y-1" style={{ color: '#5a554e' }}>
                   <li>Conversas ilimitadas</li>
                   <li>Todos os 4 Espelhos (SOMA, SEREN, LUMA, ECHO)</li>
-                  <li>Histórico ilimitado</li>
+                  <li>Historico ilimitado</li>
                   <li>Insights cross-mirror</li>
                   <li>Exportar conversas</li>
                 </ul>
@@ -112,7 +117,7 @@ export function SettingsForm({
               )}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm" style={{ color: '#7a746b' }}>
               Tens acesso total a todos os espelhos e funcionalidades.
             </p>
           )}
@@ -144,9 +149,10 @@ function PayPalButton() {
     <button
       onClick={handleSubscribe}
       disabled={loading}
-      className="w-full rounded-lg bg-[#0070BA] px-4 py-3 text-sm font-medium text-white hover:bg-[#003087] disabled:opacity-50 transition-colors"
+      className="w-full rounded-xl px-5 py-3 text-sm font-medium text-white disabled:opacity-50 transition-all hover:opacity-90"
+      style={{ backgroundColor: '#9a7b50' }}
     >
-      {loading ? 'A carregar...' : 'Subscrever com PayPal - 19€/mês'}
+      {loading ? 'A carregar...' : 'Subscrever — 19EUR/mes'}
     </button>
   )
 }

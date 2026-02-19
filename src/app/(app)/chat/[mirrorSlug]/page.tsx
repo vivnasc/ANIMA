@@ -30,7 +30,8 @@ export default async function ChatPage({ params }: ChatPageProps) {
     .eq('id', user.id)
     .single()
 
-  if (mirror.isPremium && userData?.subscription_tier !== 'premium') {
+  const isOwner = user.email === 'viv-saraiva@gmail.com'
+  if (mirror.isPremium && userData?.subscription_tier !== 'premium' && !isOwner) {
     redirect('/mirrors?upgrade=true')
   }
 

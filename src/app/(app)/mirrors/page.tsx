@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { MIRRORS } from '@/lib/ai/mirrors'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Language } from '@/types/database'
 
 export default async function MirrorsPage() {
@@ -41,15 +42,15 @@ export default async function MirrorsPage() {
   }
 
   return (
-    <div className="container max-w-4xl py-8 px-4 space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold">
+    <div className="max-w-4xl mx-auto py-8 px-4 md:px-8 space-y-8">
+      <div className="pt-8 md:pt-0">
+        <h1 className="text-2xl md:text-3xl font-heading font-semibold" style={{ color: '#2a2520' }}>
           {lang === 'pt' ? 'Os 4 Espelhos' :
            lang === 'fr' ? 'Les 4 Miroirs' :
            lang === 'es' ? 'Los 4 Espejos' :
            'The 4 Mirrors'}
         </h1>
-        <p className="text-muted-foreground">
+        <p style={{ color: '#7a746b' }}>
           {lang === 'pt' ? 'Cada espelho representa uma fase da tua jornada de autoconhecimento' :
            lang === 'fr' ? 'Chaque miroir représente une phase de votre parcours de connaissance de soi' :
            lang === 'es' ? 'Cada espejo representa una fase de tu viaje de autoconocimiento' :
@@ -58,11 +59,18 @@ export default async function MirrorsPage() {
       </div>
 
       {/* Journey Flow */}
-      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+      <div className="flex items-center justify-center gap-3 py-2">
         {mirrors.map((mirror, i) => (
-          <div key={mirror.slug} className="flex items-center gap-2">
-            <span style={{ color: mirror.color }}>{mirror.icon} {mirror.name}</span>
-            {i < mirrors.length - 1 && <span>→</span>}
+          <div key={mirror.slug} className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Image src={mirror.logo} alt={mirror.name} width={24} height={24} className="rounded" />
+              <span className="text-sm font-medium" style={{ color: mirror.color }}>{mirror.name}</span>
+            </div>
+            {i < mirrors.length - 1 && (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc7bc" strokeWidth="2" strokeLinecap="round">
+                <polyline points="9,6 15,12 9,18" />
+              </svg>
+            )}
           </div>
         ))}
       </div>
@@ -76,32 +84,37 @@ export default async function MirrorsPage() {
           return (
             <div
               key={mirror.slug}
-              className="rounded-xl border border-border bg-card overflow-hidden"
-              style={{ borderLeftWidth: '4px', borderLeftColor: mirror.color }}
+              className="rounded-2xl overflow-hidden"
+              style={{
+                backgroundColor: '#f0ece6',
+                border: '1px solid #ccc7bc',
+                borderLeftWidth: '4px',
+                borderLeftColor: mirror.color
+              }}
             >
               <div className="p-6">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
+                      className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden shrink-0"
                       style={{ backgroundColor: `${mirror.color}15` }}
                     >
-                      {mirror.icon}
+                      <Image src={mirror.logo} alt={mirror.name} width={40} height={40} className="rounded-full" />
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-lg font-bold" style={{ color: mirror.color }}>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h2 className="text-lg font-heading font-bold" style={{ color: mirror.color }}>
                           {mirror.name}
                         </h2>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs" style={{ color: '#7a746b' }}>
                           {phaseLabels[mirror.phase]?.[lang] || mirror.phase}
                         </span>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-sm mt-1" style={{ color: '#5a554e' }}>
                         {mirror.descriptions[lang]}
                       </p>
                       {convCount > 0 && (
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="text-xs mt-2" style={{ color: '#7a746b' }}>
                           {convCount} {lang === 'pt' ? 'conversas' :
                                        lang === 'fr' ? 'conversations' :
                                        lang === 'es' ? 'conversaciones' :
@@ -111,25 +124,31 @@ export default async function MirrorsPage() {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="shrink-0">
                     {locked ? (
                       <Link
                         href="/settings"
-                        className="inline-flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors"
+                        style={{ backgroundColor: '#e8e3da', color: '#7a746b' }}
                       >
-                        🔒 Upgrade
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        Upgrade
                       </Link>
                     ) : (
                       <Link
                         href={`/chat/${mirror.slug}`}
-                        className="inline-flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90"
                         style={{ backgroundColor: mirror.color }}
                       >
                         {lang === 'pt' ? 'Conversar' :
                          lang === 'fr' ? 'Parler' :
                          lang === 'es' ? 'Conversar' :
                          'Start'}
-                        {' →'}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12,5 19,12 12,19" />
+                        </svg>
                       </Link>
                     )}
                   </div>

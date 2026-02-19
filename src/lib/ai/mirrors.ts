@@ -4,6 +4,7 @@ export interface MirrorConfig {
   slug: MirrorSlug
   name: string
   icon: string
+  logo: string
   color: string
   phase: string
   isPremium: boolean
@@ -16,6 +17,7 @@ export const MIRRORS: Record<MirrorSlug, MirrorConfig> = {
     slug: 'soma',
     name: 'SOMA',
     icon: '🌱',
+    logo: '/logos/soma-logo.png',
     color: '#10b981',
     phase: 'foundation',
     isPremium: false,
@@ -31,6 +33,7 @@ export const MIRRORS: Record<MirrorSlug, MirrorConfig> = {
     slug: 'seren',
     name: 'SEREN',
     icon: '🌊',
+    logo: '/logos/seren-logo.png',
     color: '#6366f1',
     phase: 'regulation',
     isPremium: true,
@@ -46,6 +49,7 @@ export const MIRRORS: Record<MirrorSlug, MirrorConfig> = {
     slug: 'luma',
     name: 'LUMA',
     icon: '✨',
+    logo: '/logos/luma-logo.png',
     color: '#f59e0b',
     phase: 'expansion',
     isPremium: true,
@@ -61,6 +65,7 @@ export const MIRRORS: Record<MirrorSlug, MirrorConfig> = {
     slug: 'echo',
     name: 'ECHO',
     icon: '🔊',
+    logo: '/logos/echo-logo.png',
     color: '#8b5cf6',
     phase: 'integration',
     isPremium: true,
