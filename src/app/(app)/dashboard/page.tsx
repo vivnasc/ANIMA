@@ -3,8 +3,11 @@ import { createClient } from '@/lib/supabase/server'
 import { getNextSuggestion } from '@/lib/journey/suggestions'
 import { MIRRORS } from '@/lib/ai/mirrors'
 import { MILESTONES } from '@/lib/journey/constants'
+import { getSessionProgress, getNextAvailableSession, getMirrorSessionDefinitions } from '@/lib/journey/sessions'
+import { getStreak } from '@/lib/journey/streaks'
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Language } from '@/types/database'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -32,8 +35,33 @@ export default async function DashboardPage() {
     redirect('/dashboard')
   }
 
+  const lang = (userData?.language_preference || 'pt') as Language
   const suggestion = getNextSuggestion(journey)
-  const lang = (userData?.language_preference || 'pt') as keyof typeof MIRRORS.soma.descriptions
+
+  // Travessia data
+  const [sessionProgress, streak, nextSession] = await Promise.all([
+    getSessionProgress(user.id),
+    getStreak(user.id),
+    getNextAvailableSession(user.id)
+  ])
+
+  // Get session definition for next session
+  let nextSessionDef = null
+  if (nextSession) {
+    const defs = await getMirrorSessionDefinitions(nextSession.mirror_slug as 'soma' | 'seren' | 'luma' | 'echo')
+    const def = defs.find(d => d.session_number === nextSession.session_number)
+    if (def) {
+      const titleKey = `title_${lang}` as keyof typeof def
+      const subtitleKey = `subtitle_${lang}` as keyof typeof def
+      nextSessionDef = {
+        mirror_slug: nextSession.mirror_slug,
+        session_number: nextSession.session_number,
+        title: (def[titleKey] as string) || def.title_en,
+        subtitle: (def[subtitleKey] as string) || def.subtitle_en,
+        estimated_minutes: def.estimated_minutes,
+      }
+    }
+  }
 
   const phases = [
     { name: 'Fundação', mirror: 'soma' as const, complete: journey.foundation_completed, current: journey.current_phase === 'foundation', conversations: journey.soma_conversations },
@@ -44,27 +72,59 @@ export default async function DashboardPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 md:px-8 space-y-8">
-      {/* Welcome */}
+      {/* Welcome + Travessia Stats */}
       <div className="pt-8 md:pt-0">
         <h1 className="text-2xl md:text-3xl font-heading font-semibold" style={{ color: '#2a2520' }}>
-          A Tua Jornada
+          {lang === 'pt' ? 'A Tua Travessia' : lang === 'es' ? 'Tu Travesía' : lang === 'fr' ? 'Ta Traversée' : 'Your Journey'}
         </h1>
-        <p className="mt-1" style={{ color: '#7a746b' }}>
-          {journey.total_conversations} conversas na tua jornada
-          {userData?.subscription_tier === 'free' && (
-            <span className="text-xs ml-2 px-2.5 py-1 rounded-full" style={{ backgroundColor: '#e8e3da', color: '#7a746b' }}>
-              Plano grátis — {10 - (userData?.monthly_message_count || 0)} mensagens restantes
+        <div className="flex flex-wrap items-center gap-3 mt-2">
+          {/* Streak */}
+          {streak.current_streak > 0 && (
+            <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full" style={{ backgroundColor: '#f0ece6', color: '#7a746b' }}>
+              <span style={{ color: '#f59e0b' }}>&#9632;</span>
+              {streak.current_streak} {lang === 'pt' ? 'dias seguidos' : 'day streak'}
             </span>
           )}
-        </p>
+          {/* Insights count */}
+          {insights.length > 0 && (
+            <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full" style={{ backgroundColor: '#f0ece6', color: '#7a746b' }}>
+              {insights.length} insights
+            </span>
+          )}
+          {/* Patterns count */}
+          {patterns.length > 0 && (
+            <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full" style={{ backgroundColor: '#f0ece6', color: '#7a746b' }}>
+              {patterns.length} {lang === 'pt' ? 'padrões' : 'patterns'}
+            </span>
+          )}
+          {userData?.subscription_tier === 'free' && (
+            <span className="text-xs px-2.5 py-1 rounded-full" style={{ backgroundColor: '#e8e3da', color: '#7a746b' }}>
+              {lang === 'pt' ? 'Plano grátis' : 'Free plan'} — {10 - (userData?.monthly_message_count || 0)} {lang === 'pt' ? 'mensagens restantes' : 'messages left'}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Phase Progress */}
+      {/* Travessia Progress */}
       <div className="rounded-2xl p-6 md:p-8" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
-        <h2 className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#9a7b50' }}>
-          Progresso da Jornada
-        </h2>
-        <div className="flex items-center justify-between gap-1 sm:gap-3">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9a7b50' }}>
+            {lang === 'pt' ? 'Progresso da Travessia' : 'Journey Progress'}
+          </h2>
+          <span className="text-sm font-semibold" style={{ color: '#9a7b50' }}>{sessionProgress.percentage}%</span>
+        </div>
+        <div className="h-2 rounded-full mb-2" style={{ backgroundColor: '#e8e3da' }}>
+          <div
+            className="h-2 rounded-full transition-all duration-1000"
+            style={{ width: `${sessionProgress.percentage}%`, background: 'linear-gradient(90deg, #10b981, #6366f1, #f59e0b, #8b5cf6)' }}
+          />
+        </div>
+        <p className="text-xs" style={{ color: '#7a746b' }}>
+          {sessionProgress.completed} de {sessionProgress.total} {lang === 'pt' ? 'sessões completas' : 'sessions completed'}
+        </p>
+
+        {/* Phase orbs */}
+        <div className="flex items-center justify-between gap-1 sm:gap-3 mt-6">
           {phases.map((phase, i) => {
             const mirrorConfig = MIRRORS[phase.mirror]
             return (
@@ -101,7 +161,7 @@ export default async function DashboardPage() {
                   <div className="text-center">
                     <p className="font-semibold text-xs sm:text-sm" style={{ color: '#2a2520' }}>{phase.name}</p>
                     <p className="text-[10px] sm:text-xs" style={{ color: '#7a746b' }}>
-                      {mirrorConfig.name} · {phase.conversations}
+                      {mirrorConfig.name}
                     </p>
                   </div>
                 </Link>
@@ -119,11 +179,52 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Next Suggestion */}
-      {suggestion && (
+      {/* Next Session */}
+      {nextSessionDef && (
         <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#9a7b50' }}>
-            Próximo Passo Sugerido
+            {lang === 'pt' ? 'Próxima Sessão' : 'Next Session'}
+          </h2>
+          <div className="flex items-center gap-4">
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden shrink-0"
+              style={{ backgroundColor: `${MIRRORS[nextSessionDef.mirror_slug as keyof typeof MIRRORS]?.color}15` }}
+            >
+              <Image
+                src={MIRRORS[nextSessionDef.mirror_slug as keyof typeof MIRRORS]?.logo || ''}
+                alt={nextSessionDef.mirror_slug}
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium" style={{ color: '#2a2520' }}>
+                {nextSessionDef.title}
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: '#7a746b' }}>
+                {nextSessionDef.subtitle} &middot; ~{nextSessionDef.estimated_minutes}min
+              </p>
+            </div>
+            <Link
+              href={`/chat/${nextSessionDef.mirror_slug}`}
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90"
+              style={{ backgroundColor: MIRRORS[nextSessionDef.mirror_slug as keyof typeof MIRRORS]?.color || '#9a7b50' }}
+            >
+              {lang === 'pt' ? 'Continuar' : 'Continue'}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12,5 19,12 12,19" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Next Suggestion (legacy - shows when no session data yet) */}
+      {suggestion && !nextSessionDef && (
+        <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
+          <h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#9a7b50' }}>
+            {lang === 'pt' ? 'Próximo Passo Sugerido' : 'Suggested Next Step'}
           </h2>
           <p className="text-sm mb-4" style={{ color: '#2a2520' }}>{suggestion.message}</p>
           {(suggestion.mirror || suggestion.suggestedMirror) && (() => {
@@ -136,23 +237,47 @@ export default async function DashboardPage() {
                 style={{ backgroundColor: mirrorConfig?.color || '#9a7b50' }}
               >
                 <Image src={mirrorConfig.logo} alt={mirrorConfig.name} width={20} height={20} className="rounded" />
-                Iniciar conversa
+                {lang === 'pt' ? 'Iniciar conversa' : 'Start conversation'}
               </Link>
             )
           })()}
         </div>
       )}
 
+      {/* Recent Insights */}
+      {insights.length > 0 && (
+        <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
+          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#9a7b50' }}>
+            {lang === 'pt' ? 'Últimos Insights' : 'Recent Insights'}
+          </h2>
+          <div className="space-y-3">
+            {insights.map((insight) => (
+              <div key={insight.id} className="flex items-start gap-3 p-3 rounded-xl" style={{ backgroundColor: '#e8e3da' }}>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: '#9a7b5020' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9a7b50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-heading italic" style={{ color: '#2a2520' }}>
+                    &ldquo;{insight.insight_text}&rdquo;
+                  </p>
+                  <p className="text-xs mt-1" style={{ color: '#7a746b' }}>
+                    {insight.mirror_slug?.toUpperCase()} &middot; {new Date(insight.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Patterns */}
-      <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
-        <h2 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#9a7b50' }}>
-          Padrões Identificados
-        </h2>
-        {patterns.length === 0 ? (
-          <p className="text-sm" style={{ color: '#7a746b' }}>
-            À medida que exploras, padrões vão emergir e aparecer aqui
-          </p>
-        ) : (
+      {patterns.length > 0 && (
+        <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
+          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#9a7b50' }}>
+            {lang === 'pt' ? 'Padrões Identificados' : 'Identified Patterns'}
+          </h2>
           <div className="space-y-3">
             {patterns.slice(0, 4).map((pattern) => (
               <div key={pattern.id} className="flex items-start gap-3 p-3 rounded-xl" style={{ backgroundColor: '#e8e3da' }}>
@@ -188,32 +313,6 @@ export default async function DashboardPage() {
               </div>
             ))}
           </div>
-        )}
-      </div>
-
-      {/* Recent Insights */}
-      {insights.length > 0 && (
-        <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
-          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#9a7b50' }}>
-            Insights Recentes
-          </h2>
-          <div className="space-y-3">
-            {insights.map((insight) => (
-              <div key={insight.id} className="flex items-start gap-3 p-3 rounded-xl" style={{ backgroundColor: '#e8e3da' }}>
-                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: '#9a7b5020' }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9a7b50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm" style={{ color: '#2a2520' }}>{insight.insight_text}</p>
-                  <p className="text-xs mt-1" style={{ color: '#7a746b' }}>
-                    {insight.mirror_slug?.toUpperCase()} · {new Date(insight.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       )}
 
@@ -241,7 +340,7 @@ export default async function DashboardPage() {
       {/* Mirrors Quick Access */}
       <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0ece6', border: '1px solid #ccc7bc' }}>
         <h2 className="text-xs font-semibold uppercase tracking-widest mb-5" style={{ color: '#9a7b50' }}>
-          Todos os Espelhos
+          {lang === 'pt' ? 'Todos os Espelhos' : 'All Mirrors'}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {Object.values(MIRRORS).sort((a, b) => a.order - b.order).map((mirror) => (

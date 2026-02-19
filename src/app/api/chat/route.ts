@@ -5,6 +5,7 @@ import { buildCrossMirrorContext } from '@/lib/ai/cross-mirror-context'
 import { detectAndSavePatterns } from '@/lib/ai/pattern-detection'
 import { MIRROR_PROMPTS } from '@/lib/ai/prompts'
 import { FREE_TIER_MONTHLY_LIMIT, FREE_TIER_MIRRORS } from '@/lib/journey/constants'
+import { getSessionPrompt } from '@/lib/journey/sessions'
 import type { MirrorSlug } from '@/types/database'
 
 export async function POST(req: NextRequest) {
@@ -17,10 +18,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { message, conversationId, mirrorSlug } = await req.json() as {
+    const { message, conversationId, mirrorSlug, sessionNumber } = await req.json() as {
       message: string
       conversationId: string | null
       mirrorSlug: MirrorSlug
+      sessionNumber?: number
     }
 
     if (!message || !mirrorSlug) {
@@ -117,10 +119,11 @@ export async function POST(req: NextRequest) {
       .select('id')
       .single()
 
-    // Build system prompt with cross-mirror context
+    // Build system prompt with cross-mirror context + session prompt
     const crossContext = await buildCrossMirrorContext(user.id, mirrorSlug)
     const basePrompt = MIRROR_PROMPTS[mirrorSlug]
-    const fullPrompt = crossContext + basePrompt
+    const sessionPromptText = sessionNumber ? await getSessionPrompt(mirrorSlug, sessionNumber) : ''
+    const fullPrompt = crossContext + basePrompt + sessionPromptText
 
     // Get conversation history
     const { data: historyMessages } = await supabase

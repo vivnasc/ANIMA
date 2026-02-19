@@ -1,7 +1,10 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { MIRRORS } from '@/lib/ai/mirrors'
-import { ChatInterface } from '@/components/chat/chat-interface'
+import { ChatWithSessions } from '@/components/journey/chat-with-sessions'
+import { getUserSessions, getMirrorSessionDefinitions } from '@/lib/journey/sessions'
+import { getStreak } from '@/lib/journey/streaks'
+import { getUnseenMilestones } from '@/lib/journey/milestones'
 import type { MirrorSlug, Language, JourneyPhase } from '@/types/database'
 
 interface ChatPageProps {
@@ -35,21 +38,15 @@ export default async function ChatPage({ params }: ChatPageProps) {
     redirect('/mirrors?upgrade=true')
   }
 
-  // Get user's recent conversations with this mirror
-  const { data: mirrorData } = await supabase
-    .from('mirrors')
-    .select('*')
-    .eq('slug', slug)
-    .single()
+  const language = (userData?.language_preference || 'pt') as Language
 
-  const { data: conversations } = await supabase
-    .from('conversations')
-    .select('*')
-    .eq('user_id', user.id)
-    .eq('mirror_id', mirrorData?.id || '')
-    .eq('is_archived', false)
-    .order('updated_at', { ascending: false })
-    .limit(20)
+  // Get session definitions and user progress
+  const [sessionDefs, userSessions, streak, unseenMilestones] = await Promise.all([
+    getMirrorSessionDefinitions(slug),
+    getUserSessions(user.id, slug),
+    getStreak(user.id),
+    getUnseenMilestones(user.id, language)
+  ])
 
   // Get journey info
   const { data: journey } = await supabase
@@ -58,20 +55,33 @@ export default async function ChatPage({ params }: ChatPageProps) {
     .eq('user_id', user.id)
     .single()
 
-  const convList = (conversations || []).map(c => ({
-    id: String(c.id),
-    title: c.title ? String(c.title) : null,
-    updated_at: String(c.updated_at),
-    message_count: Number(c.message_count) || 0
-  }))
+  // Build session info combining definitions and user progress
+  const sessions = sessionDefs.map(def => {
+    const userSession = userSessions.find(
+      us => us.session_number === def.session_number
+    )
+    const titleKey = `title_${language}` as keyof typeof def
+    const subtitleKey = `subtitle_${language}` as keyof typeof def
+
+    return {
+      session_number: def.session_number,
+      status: (userSession?.status || 'locked') as 'locked' | 'available' | 'in_progress' | 'completed',
+      title: (def[titleKey] as string) || def.title_en,
+      subtitle: (def[subtitleKey] as string) || def.subtitle_en,
+      estimated_minutes: def.estimated_minutes,
+      conversation_id: userSession?.conversation_id || null,
+    }
+  })
 
   return (
-    <ChatInterface
+    <ChatWithSessions
       mirror={mirror}
-      conversations={convList}
+      sessions={sessions}
       userId={user.id}
-      language={(userData?.language_preference || 'pt') as Language}
+      language={language}
       journeyPhase={(journey?.current_phase || 'foundation') as JourneyPhase}
+      streakCount={streak.current_streak}
+      initialMilestones={unseenMilestones}
     />
   )
 }
