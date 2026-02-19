@@ -1,40 +1,64 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import Image from 'next/image'
 
-function LoginForm() {
+export default function ResetPasswordPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
 
-  useEffect(() => {
-    const urlError = searchParams.get('error')
-    if (urlError) setError('Não foi possível autenticar. Tenta novamente.')
-  }, [searchParams])
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-
-    if (error) {
-      setError(error.message === 'Invalid login credentials' ? 'Email ou password incorretos.' : error.message)
+    if (password.length < 6) {
+      setError('A password deve ter pelo menos 6 caracteres.')
       setLoading(false)
       return
     }
 
-    router.push('/dashboard')
+    if (password !== confirmPassword) {
+      setError('As passwords não coincidem.')
+      setLoading(false)
+      return
+    }
+
+    const supabase = createClient()
+    const { error } = await supabase.auth.updateUser({ password })
+
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    setSuccess(true)
+    setTimeout(() => router.push('/dashboard'), 2000)
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#ddd8cf' }}>
+        <div className="w-full max-w-sm space-y-6 text-center">
+          <Image src="/logos/anima-logo.png" alt="ANIMA" width={56} height={56} className="mx-auto rounded-full" />
+          <h1 className="text-2xl font-semibold" style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', color: '#2a2520' }}>
+            Password atualizada
+          </h1>
+          <p className="text-sm" style={{ color: '#5a554e' }}>
+            A redirecionar para o dashboard...
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -44,32 +68,22 @@ function LoginForm() {
           <Link href="/" className="inline-block">
             <Image src="/logos/anima-logo.png" alt="ANIMA" width={56} height={56} className="mx-auto rounded-full" />
           </Link>
-          <h1 className="text-2xl font-semibold tracking-[0.12em]" style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', color: '#2a2520' }}>
-            ANIMA
+          <h1 className="text-2xl font-semibold" style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', color: '#2a2520' }}>
+            Nova password
           </h1>
           <p className="text-sm" style={{ color: '#5a554e' }}>
-            A tua jornada de autoconhecimento
+            Escolhe a tua nova password.
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleReset} className="space-y-4">
           <div className="space-y-1.5">
-            <label htmlFor="email" className="text-sm font-medium" style={{ color: '#2a2520' }}>Email</label>
-            <input
-              id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="tu@exemplo.com" required autoComplete="email"
-              className="w-full rounded-lg px-3.5 py-2.5 text-sm outline-none transition-all duration-200 focus:ring-2"
-              style={{ backgroundColor: 'rgba(255,252,248,0.7)', border: '1px solid rgba(42,37,32,0.12)', color: '#2a2520' }}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label htmlFor="password" className="text-sm font-medium" style={{ color: '#2a2520' }}>Password</label>
+            <label htmlFor="password" className="text-sm font-medium" style={{ color: '#2a2520' }}>Nova password</label>
             <div className="relative">
               <input
                 id="password" type={showPassword ? 'text' : 'password'} value={password}
-                onChange={(e) => setPassword(e.target.value)} placeholder="A tua password"
-                required autoComplete="current-password"
+                onChange={(e) => setPassword(e.target.value)} placeholder="Min. 6 caracteres"
+                required minLength={6} autoComplete="new-password"
                 className="w-full rounded-lg px-3.5 py-2.5 pr-10 text-sm outline-none transition-all duration-200 focus:ring-2"
                 style={{ backgroundColor: 'rgba(255,252,248,0.7)', border: '1px solid rgba(42,37,32,0.12)', color: '#2a2520' }}
               />
@@ -86,34 +100,26 @@ function LoginForm() {
             </div>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
-
-          <div className="flex justify-end">
-            <Link href="/forgot-password" className="text-xs hover:underline" style={{ color: '#8a847a' }}>
-              Esqueceste a password?
-            </Link>
+          <div className="space-y-1.5">
+            <label htmlFor="confirm" className="text-sm font-medium" style={{ color: '#2a2520' }}>Confirmar password</label>
+            <input
+              id="confirm" type={showPassword ? 'text' : 'password'} value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repete a password"
+              required minLength={6} autoComplete="new-password"
+              className="w-full rounded-lg px-3.5 py-2.5 text-sm outline-none transition-all duration-200 focus:ring-2"
+              style={{ backgroundColor: 'rgba(255,252,248,0.7)', border: '1px solid rgba(42,37,32,0.12)', color: '#2a2520' }}
+            />
           </div>
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button type="submit" disabled={loading}
             className="w-full rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 hover:opacity-90 disabled:opacity-50"
             style={{ backgroundColor: '#9a7b50', color: '#fff' }}>
-            {loading ? 'A entrar...' : 'Entrar'}
+            {loading ? 'A guardar...' : 'Guardar Nova Password'}
           </button>
         </form>
-
-        <p className="text-center text-sm" style={{ color: '#8a847a' }}>
-          Ainda não tens conta?{' '}
-          <Link href="/signup" className="font-medium hover:underline" style={{ color: '#2a2520' }}>Criar conta</Link>
-        </p>
       </div>
     </div>
-  )
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
   )
 }
