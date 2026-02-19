@@ -9,19 +9,24 @@ import { translations } from '@/lib/landing-i18n'
 import type { Language } from '@/types/database'
 
 /* ═══════════════════════════════════════════════════
-   WARM PALETTE — intimate, sober, human
-   Inspired by editorial/literary design language
+   WARM NEUTRAL PALETTE — intimate, sober, human
+   Warm parchment/stone — neither dark nor light
    ═══════════════════════════════════════════════════ */
 const W = {
-  bg: '#100e0c',                        // warm near-black (aged wood)
-  surface: 'rgba(30, 26, 22, 0.9)',     // warm card surface
-  surfaceBorder: 'rgba(237, 233, 227, 0.07)',
-  surfaceBorderHover: 'rgba(237, 233, 227, 0.14)',
-  text: '#ede9e3',                      // cream white
-  textSec: '#a89f94',                   // warm taupe
-  textMuted: '#6b6560',                 // warm muted
-  gold: '#c9a96e',                      // warm gold accent
-  goldSoft: '#c9a96e30',               // gold at 19% opacity
+  bg: '#ddd8cf',                        // warm parchment stone
+  surface: 'rgba(255, 252, 248, 0.6)',  // lighter card surface (paper)
+  surfaceBorder: 'rgba(42, 37, 32, 0.10)',
+  surfaceBorderHover: 'rgba(42, 37, 32, 0.20)',
+  text: '#2a2520',                      // warm near-black
+  textSec: '#5a554e',                   // warm medium brown
+  textMuted: '#8a847a',                 // warm muted
+  gold: '#9a7b50',                      // deeper gold for contrast
+  goldSoft: '#9a7b5020',               // gold at 13% opacity
+  // For dark accent sections (CTA box)
+  darkBg: '#2a2520',
+  darkText: '#ede9e3',
+  darkTextSec: '#a89f94',
+  darkGold: '#c9a96e',
 }
 
 const MIRROR_COLORS: Record<string, string> = {
@@ -54,8 +59,8 @@ const stagger = {
 
 const LANG_LABELS: Record<Language, string> = { pt: 'PT', en: 'EN', es: 'ES', fr: 'FR' }
 
-/* ── Glass card base ── */
-const glass = `bg-[rgba(30,26,22,0.9)] backdrop-blur-[20px] border border-[rgba(237,233,227,0.07)]`
+/* ── Glass card base — warm paper on neutral bg ── */
+const glass = `bg-[rgba(255,252,248,0.6)] backdrop-blur-[20px] border border-[rgba(42,37,32,0.10)]`
 
 export default function LandingPage() {
   const [lang, setLang] = useState<Language>('pt')
@@ -64,15 +69,15 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: W.bg, color: W.text }}>
-      {/* ── Background: warm amber/gold orbs ── */}
+      {/* ── Background: subtle warm orbs ── */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div
           className="absolute top-[20%] left-[15%] w-[500px] h-[500px] rounded-full animate-breathe"
-          style={{ backgroundColor: '#c9a96e08' }}
+          style={{ backgroundColor: 'rgba(154, 123, 80, 0.06)' }}
         />
         <div
           className="absolute bottom-[20%] right-[15%] w-[400px] h-[400px] rounded-full animate-breathe"
-          style={{ backgroundColor: '#8b7fb510', animationDelay: '4s' }}
+          style={{ backgroundColor: 'rgba(139, 127, 181, 0.05)', animationDelay: '4s' }}
         />
       </div>
 
@@ -81,7 +86,7 @@ export default function LandingPage() {
           ═══════════════════════════════════════════════ */}
       <header
         className="fixed top-0 left-0 right-0 z-[100] backdrop-blur-[20px]"
-        style={{ backgroundColor: 'rgba(16, 14, 12, 0.88)', borderBottom: `1px solid ${W.surfaceBorder}` }}
+        style={{ backgroundColor: 'rgba(221, 216, 207, 0.88)', borderBottom: `1px solid ${W.surfaceBorder}` }}
       >
         <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
@@ -92,10 +97,10 @@ export default function LandingPage() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: W.textSec }}>
-            <a href="#how-it-works" className="hover:text-[#ede9e3] transition-colors duration-300">{t.nav.howItWorks}</a>
-            <a href="#mirrors" className="hover:text-[#ede9e3] transition-colors duration-300">{t.nav.mirrors}</a>
-            <a href="#pricing" className="hover:text-[#ede9e3] transition-colors duration-300">{t.nav.pricing}</a>
-            <a href="#faq" className="hover:text-[#ede9e3] transition-colors duration-300">{t.nav.faq}</a>
+            <a href="#how-it-works" className="hover:text-[#2a2520] transition-colors duration-300">{t.nav.howItWorks}</a>
+            <a href="#mirrors" className="hover:text-[#2a2520] transition-colors duration-300">{t.nav.mirrors}</a>
+            <a href="#pricing" className="hover:text-[#2a2520] transition-colors duration-300">{t.nav.pricing}</a>
+            <a href="#faq" className="hover:text-[#2a2520] transition-colors duration-300">{t.nav.faq}</a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -105,19 +110,19 @@ export default function LandingPage() {
                   key={l}
                   onClick={() => setLang(l)}
                   className="px-2.5 py-1.5 transition-colors duration-300"
-                  style={{ color: lang === l ? W.text : W.textMuted, backgroundColor: lang === l ? 'rgba(237,233,227,0.06)' : 'transparent' }}
+                  style={{ color: lang === l ? W.text : W.textMuted, backgroundColor: lang === l ? 'rgba(42,37,32,0.08)' : 'transparent' }}
                 >
                   {LANG_LABELS[l]}
                 </button>
               ))}
             </div>
-            <Link href="/login" className="text-sm hidden sm:block transition-colors duration-300 hover:text-[#ede9e3]" style={{ color: W.textSec }}>
+            <Link href="/login" className="text-sm hidden sm:block transition-colors duration-300 hover:text-[#2a2520]" style={{ color: W.textSec }}>
               {t.nav.login}
             </Link>
             <Link
               href="/signup"
               className="rounded-full px-5 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90"
-              style={{ backgroundColor: W.gold, color: W.bg }}
+              style={{ backgroundColor: W.gold, color: '#fff' }}
             >
               {t.nav.start}
             </Link>
@@ -168,14 +173,14 @@ export default function LandingPage() {
               <Link
                 href="/signup"
                 className="rounded-full px-8 py-4 text-base font-medium transition-all duration-300 hover:-translate-y-[1px]"
-                style={{ backgroundColor: W.gold, color: W.bg, boxShadow: '0 4px 24px rgba(201,169,110,0.2)' }}
+                style={{ backgroundColor: W.gold, color: '#fff', boxShadow: '0 4px 24px rgba(154,123,80,0.25)' }}
               >
                 {t.hero.cta}
               </Link>
               <a
                 href="#how-it-works"
                 className="rounded-full px-8 py-4 text-base font-medium transition-all duration-300 hover:border-[rgba(237,233,227,0.2)]"
-                style={{ border: `1px solid ${W.surfaceBorder}`, color: W.textSec }}
+                style={{ border: `1px solid ${W.surfaceBorderHover}`, color: W.textSec }}
               >
                 {t.hero.ctaSecondary}
               </a>
@@ -185,7 +190,7 @@ export default function LandingPage() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-float">
-          <div className="w-6 h-10 rounded-full flex items-start justify-center p-1.5" style={{ border: `2px solid ${W.surfaceBorder}` }}>
+          <div className="w-6 h-10 rounded-full flex items-start justify-center p-1.5" style={{ border: `2px solid ${W.surfaceBorderHover}` }}>
             <motion.div
               className="w-1.5 h-1.5 rounded-full"
               style={{ backgroundColor: W.textMuted }}
@@ -241,7 +246,7 @@ export default function LandingPage() {
                   whileHover={{ y: -4, transition: { duration: 0.3 } }}
                   className={`rounded-2xl ${glass} p-7 transition-all duration-300`}
                 >
-                  <p className="font-heading italic leading-[1.8] mb-6" style={{ color: `${W.text}cc` }}>
+                  <p className="font-heading italic leading-[1.8] mb-6" style={{ color: W.text }}>
                     &ldquo;{testimonial.quote}&rdquo;
                   </p>
                   <div className="flex items-center gap-3">
@@ -331,7 +336,7 @@ export default function LandingPage() {
                     whileHover={{
                       y: -6,
                       borderColor: `${color}30`,
-                      boxShadow: `0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px ${color}08`,
+                      boxShadow: `0 20px 60px rgba(0, 0, 0, 0.08), 0 0 40px ${color}12`,
                       transition: { duration: 0.3 },
                     }}
                     className={`group relative rounded-[20px] ${glass} p-10 transition-all duration-300 overflow-hidden`}
@@ -418,8 +423,8 @@ export default function LandingPage() {
                 </ul>
                 <Link
                   href="/signup"
-                  className="block text-center rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:bg-[rgba(237,233,227,0.04)]"
-                  style={{ border: `1px solid ${W.surfaceBorder}`, color: W.textSec }}
+                  className="block text-center rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:bg-[rgba(42,37,32,0.04)]"
+                  style={{ border: `1px solid ${W.surfaceBorderHover}`, color: W.textSec }}
                 >
                   {t.pricing.free.cta}
                 </Link>
@@ -432,7 +437,7 @@ export default function LandingPage() {
                 style={{ borderColor: `${W.gold}25` }}
               >
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="rounded-full px-4 py-1 text-xs font-medium whitespace-nowrap" style={{ backgroundColor: W.gold, color: W.bg }}>
+                  <span className="rounded-full px-4 py-1 text-xs font-medium whitespace-nowrap" style={{ backgroundColor: W.gold, color: '#fff' }}>
                     {t.pricing.premium.badge}
                   </span>
                 </div>
@@ -456,7 +461,7 @@ export default function LandingPage() {
                 <Link
                   href="/signup"
                   className="block text-center rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:opacity-90"
-                  style={{ backgroundColor: W.gold, color: W.bg }}
+                  style={{ backgroundColor: W.gold, color: '#fff' }}
                 >
                   {t.pricing.premium.cta}
                 </Link>
@@ -522,34 +527,34 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto px-6">
           <div
             className="rounded-3xl px-8 py-24 text-center relative overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, #1a1510, #241e17)', border: `1px solid ${W.goldSoft}` }}
+            style={{ background: `linear-gradient(135deg, ${W.darkBg}, #3d3630)`, border: `1px solid rgba(201,169,110,0.15)` }}
           >
             {/* Warm glow behind */}
             <div
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[200px] rounded-full animate-ember"
-              style={{ backgroundColor: '#c9a96e10' }}
+              style={{ backgroundColor: 'rgba(201,169,110,0.06)' }}
             />
 
             <motion.div
               initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} variants={stagger}
               className="relative"
             >
-              <motion.h2 variants={fadeUp} className="font-heading text-3xl md:text-[2.75rem] font-semibold leading-[1.2]">
+              <motion.h2 variants={fadeUp} className="font-heading text-3xl md:text-[2.75rem] font-semibold leading-[1.2]" style={{ color: W.darkText }}>
                 {t.finalCta.title}
               </motion.h2>
-              <motion.p variants={fadeUp} className="mt-5 text-lg leading-relaxed" style={{ color: W.textSec }}>
+              <motion.p variants={fadeUp} className="mt-5 text-lg leading-relaxed" style={{ color: W.darkTextSec }}>
                 {t.finalCta.subtitle}
               </motion.p>
               <motion.div variants={fadeUp} className="mt-10">
                 <Link
                   href="/signup"
                   className="inline-block rounded-full px-10 py-4 text-base font-medium transition-all duration-300 hover:-translate-y-[1px]"
-                  style={{ backgroundColor: W.gold, color: W.bg, boxShadow: '0 4px 24px rgba(201,169,110,0.25)' }}
+                  style={{ backgroundColor: W.darkGold, color: W.darkBg, boxShadow: '0 4px 24px rgba(201,169,110,0.3)' }}
                 >
                   {t.finalCta.button}
                 </Link>
               </motion.div>
-              <motion.p variants={fadeUp} className="mt-5 text-sm" style={{ color: W.textMuted }}>
+              <motion.p variants={fadeUp} className="mt-5 text-sm" style={{ color: '#6b6560' }}>
                 {t.finalCta.urgency}
               </motion.p>
             </motion.div>
@@ -568,14 +573,14 @@ export default function LandingPage() {
               <span className="font-heading text-lg font-semibold tracking-[0.12em]">ANIMA</span>
             </Link>
             <div className="flex items-center gap-6 text-sm" style={{ color: W.textMuted }}>
-              <span className="hover:text-[#ede9e3] transition-colors duration-300 cursor-pointer">{t.footer.privacy}</span>
-              <span className="hover:text-[#ede9e3] transition-colors duration-300 cursor-pointer">{t.footer.terms}</span>
+              <span className="hover:text-[#2a2520] transition-colors duration-300 cursor-pointer">{t.footer.privacy}</span>
+              <span className="hover:text-[#2a2520] transition-colors duration-300 cursor-pointer">{t.footer.terms}</span>
             </div>
           </div>
           <div className="mt-8 pt-8" style={{ borderTop: `1px solid ${W.surfaceBorder}` }}>
             <p className="text-xs max-w-2xl leading-relaxed" style={{ color: W.textMuted }}>{t.footer.disclaimer}</p>
           </div>
-          <div className="mt-6 text-center text-xs" style={{ color: `${W.textMuted}88` }}>
+          <div className="mt-6 text-center text-xs" style={{ color: W.textMuted }}>
             {t.footer.copyright}
           </div>
         </div>
