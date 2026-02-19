@@ -43,22 +43,15 @@ export interface LandingTranslations {
     title: string
     subtitle: string
     urgency: string
-    free: {
+    tiers: Array<{
       name: string
       price: string
       period: string
+      badge?: string
+      highlight?: boolean
       features: string[]
       cta: string
-    }
-    premium: {
-      name: string
-      price: string
-      period: string
-      oldPrice: string
-      badge: string
-      features: string[]
-      cta: string
-    }
+    }>
     guarantee: string
   }
   faq: {
@@ -171,36 +164,71 @@ export const translations: Record<Language, LandingTranslations> = {
       title: 'Começa grátis',
       subtitle: 'Sem cartão. Sem compromisso. Evolui quando sentires que faz sentido.',
       urgency: 'Preço de lançamento — aumenta em breve',
-      free: {
-        name: 'Grátis',
-        price: '€0',
-        period: '/mês',
-        features: [
-          '10 conversas por mês',
-          'Espelho SOMA completo',
-          'O espelho lembra o que partilhaste',
-          'Mapa dos teus padrões',
-          'Histórico de 30 dias',
-        ],
-        cta: 'Começar Grátis',
-      },
-      premium: {
-        name: 'Premium',
-        price: '€9',
-        period: '/mês',
-        oldPrice: '€19',
-        badge: 'Preço de Lançamento',
-        features: [
-          'Conversas ilimitadas',
-          'Os 4 Espelhos desbloqueados',
-          'Insights entre espelhos',
-          'Histórico completo',
-          'Exportar conversas',
-          'Jornadas guiadas',
-          'Suporte dedicado',
-        ],
-        cta: 'Começar Premium',
-      },
+      tiers: [
+        {
+          name: 'Grátis',
+          price: '€0',
+          period: '/mês',
+          features: [
+            '10 conversas por mês',
+            'Espelho SOMA',
+            'Mapa de padrões básico',
+          ],
+          cta: 'Começar Grátis',
+        },
+        {
+          name: 'Essencial',
+          price: '€19',
+          period: '/mês',
+          highlight: true,
+          badge: 'Mais Popular',
+          features: [
+            'Conversas ilimitadas',
+            '4 Espelhos (SOMA, SEREN, LUMA, ECHO)',
+            '28 sessões guiadas',
+            'Detecção de padrões por AI',
+            'Diário exportável',
+          ],
+          cta: 'Começar Essencial',
+        },
+        {
+          name: 'Relacional',
+          price: '€29',
+          period: '/mês',
+          features: [
+            'Tudo do Essencial',
+            '5° Espelho: NEXUS (relacional)',
+            '35 sessões totais',
+            'Padrões de vinculação e comunicação',
+          ],
+          cta: 'Começar Relacional',
+        },
+        {
+          name: 'Duo',
+          price: '€39',
+          period: '/mês',
+          features: [
+            'Tudo do Relacional',
+            'Jornada partilhada para 2 pessoas',
+            'Insights cruzados do casal',
+            'Convite por link',
+          ],
+          cta: 'Começar Duo',
+        },
+        {
+          name: 'Profundo',
+          price: '€49',
+          period: '/mês',
+          badge: 'Máximo',
+          features: [
+            'Tudo do Duo',
+            'Sessões livres ilimitadas',
+            'Relatório mensal AI',
+            'Timeline de evolução',
+          ],
+          cta: 'Começar Profundo',
+        },
+      ],
       guarantee: 'Cancela quando quiseres. Sem perguntas.',
     },
     faq: {
@@ -334,36 +362,71 @@ export const translations: Record<Language, LandingTranslations> = {
       title: 'Start free',
       subtitle: 'No card. No commitment. Upgrade when it feels right.',
       urgency: 'Launch price \u2014 increasing soon',
-      free: {
-        name: 'Free',
-        price: '\u20AC0',
-        period: '/month',
-        features: [
-          '10 conversations per month',
-          'Full SOMA mirror',
-          'The mirror remembers what you shared',
-          'Your pattern map',
-          '30-day history',
-        ],
-        cta: 'Start Free',
-      },
-      premium: {
-        name: 'Premium',
-        price: '\u20AC9',
-        period: '/month',
-        oldPrice: '\u20AC19',
-        badge: 'Launch Price',
-        features: [
-          'Unlimited conversations',
-          'All 4 Mirrors unlocked',
-          'Cross-mirror insights',
-          'Full history',
-          'Export conversations',
-          'Guided journeys',
-          'Dedicated support',
-        ],
-        cta: 'Start Premium',
-      },
+      tiers: [
+        {
+          name: 'Free',
+          price: '\u20AC0',
+          period: '/month',
+          features: [
+            '10 conversations per month',
+            'SOMA mirror',
+            'Basic pattern map',
+          ],
+          cta: 'Start Free',
+        },
+        {
+          name: 'Essential',
+          price: '\u20AC19',
+          period: '/month',
+          highlight: true,
+          badge: 'Most Popular',
+          features: [
+            'Unlimited conversations',
+            '4 Mirrors (SOMA, SEREN, LUMA, ECHO)',
+            '28 guided sessions',
+            'AI pattern detection',
+            'Exportable diary',
+          ],
+          cta: 'Start Essential',
+        },
+        {
+          name: 'Relational',
+          price: '\u20AC29',
+          period: '/month',
+          features: [
+            'Everything in Essential',
+            '5th Mirror: NEXUS (relational)',
+            '35 total sessions',
+            'Attachment & communication patterns',
+          ],
+          cta: 'Start Relational',
+        },
+        {
+          name: 'Duo',
+          price: '\u20AC39',
+          period: '/month',
+          features: [
+            'Everything in Relational',
+            'Shared journey for 2 people',
+            'Couple cross-insights',
+            'Invite by link',
+          ],
+          cta: 'Start Duo',
+        },
+        {
+          name: 'Deep',
+          price: '\u20AC49',
+          period: '/month',
+          badge: 'Maximum',
+          features: [
+            'Everything in Duo',
+            'Unlimited free sessions',
+            'Monthly AI report',
+            'Evolution timeline',
+          ],
+          cta: 'Start Deep',
+        },
+      ],
       guarantee: 'Cancel anytime. No questions asked.',
     },
     faq: {
@@ -497,36 +560,13 @@ export const translations: Record<Language, LandingTranslations> = {
       title: 'Empieza gratis',
       subtitle: 'Sin tarjeta. Sin compromiso. Mejora cuando tenga sentido.',
       urgency: 'Precio de lanzamiento \u2014 aumenta pronto',
-      free: {
-        name: 'Gratis',
-        price: '\u20AC0',
-        period: '/mes',
-        features: [
-          '10 conversaciones al mes',
-          'Espejo SOMA completo',
-          'El espejo recuerda lo que compartiste',
-          'Mapa de tus patrones',
-          'Historial de 30 d\u00EDas',
-        ],
-        cta: 'Empezar Gratis',
-      },
-      premium: {
-        name: 'Premium',
-        price: '\u20AC9',
-        period: '/mes',
-        oldPrice: '\u20AC19',
-        badge: 'Precio de Lanzamiento',
-        features: [
-          'Conversaciones ilimitadas',
-          'Los 4 Espejos desbloqueados',
-          'Insights entre espejos',
-          'Historial completo',
-          'Exportar conversaciones',
-          'Viajes guiados',
-          'Soporte dedicado',
-        ],
-        cta: 'Empezar Premium',
-      },
+      tiers: [
+        { name: 'Gratis', price: '\u20AC0', period: '/mes', features: ['10 conversaciones al mes', 'Espejo SOMA', 'Mapa de patrones b\u00E1sico'], cta: 'Empezar Gratis' },
+        { name: 'Esencial', price: '\u20AC19', period: '/mes', highlight: true, badge: 'M\u00E1s Popular', features: ['Conversaciones ilimitadas', '4 Espejos', '28 sesiones guiadas', 'Detecci\u00F3n de patrones AI', 'Diario exportable'], cta: 'Empezar Esencial' },
+        { name: 'Relacional', price: '\u20AC29', period: '/mes', features: ['Todo del Esencial', '5\u00BA Espejo: NEXUS', '35 sesiones totales', 'Patrones de apego y comunicaci\u00F3n'], cta: 'Empezar Relacional' },
+        { name: 'Duo', price: '\u20AC39', period: '/mes', features: ['Todo del Relacional', 'Viaje compartido para 2', 'Insights cruzados de pareja', 'Invitaci\u00F3n por link'], cta: 'Empezar Duo' },
+        { name: 'Profundo', price: '\u20AC49', period: '/mes', badge: 'M\u00E1ximo', features: ['Todo del Duo', 'Sesiones libres ilimitadas', 'Informe mensual AI', 'L\u00EDnea de evoluci\u00F3n'], cta: 'Empezar Profundo' },
+      ],
       guarantee: 'Cancela cuando quieras. Sin preguntas.',
     },
     faq: {
@@ -660,36 +700,13 @@ export const translations: Record<Language, LandingTranslations> = {
       title: 'Commence gratuitement',
       subtitle: 'Sans carte. Sans engagement. \u00C9volue quand \u00E7a te semble juste.',
       urgency: 'Prix de lancement \u2014 augmente bient\u00F4t',
-      free: {
-        name: 'Gratuit',
-        price: '\u20AC0',
-        period: '/mois',
-        features: [
-          '10 conversations par mois',
-          'Miroir SOMA complet',
-          'Le miroir se souvient de ce que tu as partag\u00E9',
-          'Carte de tes sch\u00E9mas',
-          'Historique de 30 jours',
-        ],
-        cta: 'Commencer Gratuit',
-      },
-      premium: {
-        name: 'Premium',
-        price: '\u20AC9',
-        period: '/mois',
-        oldPrice: '\u20AC19',
-        badge: 'Prix de Lancement',
-        features: [
-          'Conversations illimit\u00E9es',
-          'Les 4 Miroirs d\u00E9bloqu\u00E9s',
-          'Insights entre miroirs',
-          'Historique complet',
-          'Exporter les conversations',
-          'Parcours guid\u00E9s',
-          'Support d\u00E9di\u00E9',
-        ],
-        cta: 'Commencer Premium',
-      },
+      tiers: [
+        { name: 'Gratuit', price: '\u20AC0', period: '/mois', features: ['10 conversations par mois', 'Miroir SOMA', 'Carte de sch\u00E9mas basique'], cta: 'Commencer Gratuit' },
+        { name: 'Essentiel', price: '\u20AC19', period: '/mois', highlight: true, badge: 'Plus Populaire', features: ['Conversations illimit\u00E9es', '4 Miroirs', '28 sessions guid\u00E9es', 'D\u00E9tection de sch\u00E9mas AI', 'Journal exportable'], cta: 'Commencer Essentiel' },
+        { name: 'Relationnel', price: '\u20AC29', period: '/mois', features: ['Tout de l\'Essentiel', '5e Miroir: NEXUS', '35 sessions totales', 'Sch\u00E9mas d\'attachement et communication'], cta: 'Commencer Relationnel' },
+        { name: 'Duo', price: '\u20AC39', period: '/mois', features: ['Tout du Relationnel', 'Parcours partag\u00E9 pour 2', 'Insights crois\u00E9s du couple', 'Invitation par lien'], cta: 'Commencer Duo' },
+        { name: 'Profond', price: '\u20AC49', period: '/mois', badge: 'Maximum', features: ['Tout du Duo', 'Sessions libres illimit\u00E9es', 'Rapport mensuel AI', 'Timeline d\'\u00E9volution'], cta: 'Commencer Profond' },
+      ],
       guarantee: 'Annule quand tu veux. Sans questions.',
     },
     faq: {

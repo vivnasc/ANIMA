@@ -25,4 +25,10 @@ export const RITUAL_CONTENT: Record<MirrorSlug, Record<Language, string>> = {
     es: 'Recuerda el camino hasta aquí. Estás lista.',
     fr: 'Souviens-toi du chemin. Tu es prête.',
   },
+  nexus: {
+    pt: 'Pensa em alguém importante. O que sentes?',
+    en: 'Think of someone important. What do you feel?',
+    es: 'Piensa en alguien importante. ¿Qué sientes?',
+    fr: 'Pense à quelqu\'un d\'important. Que ressens-tu?',
+  },
 }

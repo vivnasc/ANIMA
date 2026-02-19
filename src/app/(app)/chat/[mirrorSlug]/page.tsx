@@ -34,7 +34,9 @@ export default async function ChatPage({ params }: ChatPageProps) {
     .single()
 
   const isOwner = user.email === 'viv-saraiva@gmail.com'
-  if (mirror.isPremium && userData?.subscription_tier !== 'premium' && !isOwner) {
+  const { canAccessMirror } = await import('@/lib/journey/constants')
+  const tier = (userData?.subscription_tier || 'free') as import('@/types/database').SubscriptionTier
+  if (!canAccessMirror(tier, mirror.slug) && !isOwner) {
     redirect('/mirrors?upgrade=true')
   }
 
