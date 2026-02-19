@@ -1,0 +1,691 @@
+import { useState, useEffect } from “react”;
+
+const PHASES = [
+{ id: “soma”, name: “SOMA”, phase: “Fundação”, color: “#10b981”, icon: “🌱”, sessions: 7 },
+{ id: “seren”, name: “SEREN”, phase: “Regulação”, color: “#3b82f6”, icon: “🌊”, sessions: 7 },
+{ id: “luma”, name: “LUMA”, phase: “Expansão”, color: “#f59e0b”, icon: “✨”, sessions: 7 },
+{ id: “echo”, name: “ECHO”, phase: “Integração”, color: “#8b5cf6”, icon: “🔮”, sessions: 7 },
+];
+
+// ─── Animated Background Orbs ───
+function AnimatedOrb({ color, size, x, y, delay }) {
+return (
+<div style={{
+position: “absolute”, width: size, height: size, borderRadius: “50%”,
+background: `radial-gradient(circle, ${color}30, transparent 70%)`,
+left: x, top: y, filter: “blur(50px)”, pointerEvents: “none”,
+animation: `orbFloat 10s ease-in-out ${delay}s infinite alternate`,
+}} />
+);
+}
+
+// ─── Phase Ring (Journey Map) ───
+function PhaseRing({ currentPhaseIndex, sessionsCompleted, totalSessions }) {
+const radius = 105;
+const strokeWidth = 6;
+const circumference = 2 * Math.PI * radius;
+const phase = PHASES[currentPhaseIndex];
+
+return (
+<div style={{ position: “relative”, width: 260, height: 260 }}>
+<svg width={260} height={260} style={{ transform: “rotate(-90deg)” }}>
+<circle cx={130} cy={130} r={radius} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={strokeWidth} />
+{PHASES.map((p, i) => {
+const segLen = circumference / 4;
+const offset = i * segLen;
+const done = i < currentPhaseIndex;
+const active = i === currentPhaseIndex;
+const fill = done ? segLen : active ? (sessionsCompleted / totalSessions) * segLen : 0;
+return (
+<circle key={p.id} cx={130} cy={130} r={radius} fill=“none”
+stroke={p.color} strokeWidth={strokeWidth + (active ? 2 : 0)}
+strokeDasharray={`${fill} ${circumference - fill}`}
+strokeDashoffset={-offset} strokeLinecap=“round”
+style={{
+opacity: done || active ? 1 : 0.15,
+transition: “all 1.2s cubic-bezier(0.4,0,0.2,1)”,
+filter: active ? `drop-shadow(0 0 8px ${p.color}80)` : “none”,
+}}
+/>
+);
+})}
+</svg>
+<div style={{
+position: “absolute”, inset: 0, display: “flex”, flexDirection: “column”,
+alignItems: “center”, justifyContent: “center”,
+}}>
+<div style={{ fontSize: 34, marginBottom: 2 }}>{phase.icon}</div>
+<div style={{
+fontSize: 12, color: phase.color, fontWeight: 600,
+letterSpacing: “0.1em”, textTransform: “uppercase”,
+fontFamily: “‘DM Sans’, sans-serif”,
+}}>{phase.name}</div>
+<div style={{
+fontSize: 11, color: “rgba(255,255,255,0.35)”, marginTop: 2,
+fontFamily: “‘DM Sans’, sans-serif”,
+}}>Sessão {sessionsCompleted}/{totalSessions}</div>
+</div>
+{PHASES.map((p, i) => {
+const angle = (i * 90 - 90) * (Math.PI / 180);
+const dotR = radius + 22;
+const cx = 130 + dotR * Math.cos(angle);
+const cy = 130 + dotR * Math.sin(angle);
+const done = i < currentPhaseIndex;
+const active = i === currentPhaseIndex;
+return (
+<div key={p.id} style={{
+position: “absolute”, left: cx - 13, top: cy - 13, width: 26, height: 26,
+borderRadius: “50%”,
+background: done ? p.color : active ? `${p.color}30` : “rgba(255,255,255,0.05)”,
+border: active ? `2px solid ${p.color}` : “1px solid rgba(255,255,255,0.08)”,
+display: “flex”, alignItems: “center”, justifyContent: “center”, fontSize: 12,
+transition: “all 0.5s ease”,
+boxShadow: active ? `0 0 14px ${p.color}30` : “none”,
+}}>
+{done ? <span style={{ fontSize: 10, color: “white” }}>✓</span> : <span style={{ fontSize: 11 }}>{p.icon}</span>}
+</div>
+);
+})}
+</div>
+);
+}
+
+// ─── Session Card ───
+function SessionCard({ session, isLocked, isCompleted, isCurrent, phaseColor, onClick }) {
+return (
+<button onClick={!isLocked ? onClick : undefined} style={{
+width: “100%”, padding: “14px 16px”, borderRadius: 14, textAlign: “left”,
+border: isCurrent ? `1.5px solid ${phaseColor}50` : “1px solid rgba(255,255,255,0.05)”,
+background: isCurrent ? `linear-gradient(135deg, ${phaseColor}10, ${phaseColor}04)` :
+isCompleted ? “rgba(255,255,255,0.025)” : “rgba(255,255,255,0.015)”,
+cursor: isLocked ? “default” : “pointer”, opacity: isLocked ? 0.35 : 1,
+display: “flex”, alignItems: “center”, gap: 12, color: “white”,
+transition: “all 0.3s ease”, position: “relative”,
+}}>
+<div style={{
+width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+background: isCompleted ? `${phaseColor}20` : isCurrent ? phaseColor : “rgba(255,255,255,0.04)”,
+display: “flex”, alignItems: “center”, justifyContent: “center”,
+fontSize: 13, fontWeight: 600, fontFamily: “‘DM Sans’, sans-serif”,
+color: isCompleted ? phaseColor : isCurrent ? “white” : “rgba(255,255,255,0.25)”,
+}}>
+{isCompleted ? “✓” : isLocked ? “🔒” : session.number}
+</div>
+<div style={{ flex: 1, minWidth: 0 }}>
+<div style={{
+fontSize: 13.5, fontWeight: 500, fontFamily: “‘DM Sans’, sans-serif”,
+color: isCurrent ? “white” : “rgba(255,255,255,0.65)”, marginBottom: 2,
+}}>{session.title}</div>
+<div style={{
+fontSize: 11.5, color: “rgba(255,255,255,0.3)”, fontFamily: “‘DM Sans’, sans-serif”,
+}}>{session.subtitle}</div>
+</div>
+{!isLocked && (
+<div style={{ fontSize: 10.5, color: “rgba(255,255,255,0.25)”, fontFamily: “‘DM Sans’, sans-serif”, flexShrink: 0 }}>
+~{session.duration}min
+</div>
+)}
+{isCurrent && <div style={{
+position: “absolute”, right: 14, width: 8, height: 8, borderRadius: “50%”,
+background: phaseColor, animation: “pulse 2s ease-in-out infinite”,
+}} />}
+</button>
+);
+}
+
+// ─── Ritual de Entrada ───
+function RitualOverlay({ phase, onBegin, onSkip }) {
+const [step, setStep] = useState(0); // 0=intro, 1=breathing, 2=ready
+const [breathCount, setBreathCount] = useState(0);
+
+const rituals = {
+soma: { prompt: “Coloca uma mão no peito e outra na barriga.”, instruction: “Respira fundo 3 vezes. Sente o teu corpo presente.”, icon: “🌱” },
+seren: { prompt: “Fecha os olhos por um momento.”, instruction: “Observa o que sentes agora, sem julgar. Apenas nota.”, icon: “🌊” },
+luma: { prompt: “Imagina um espaço vasto dentro de ti.”, instruction: “Aqui não há certo nem errado. Apenas possibilidades.”, icon: “✨” },
+echo: { prompt: “Recorda os caminhos que percorreste.”, instruction: “Cada padrão revelado foi um passo. Vamos integrá-los.”, icon: “🔮” },
+};
+const r = rituals[phase.id];
+
+useEffect(() => {
+if (step === 1 && breathCount < 3) {
+const t = setTimeout(() => setBreathCount(c => c + 1), 4000);
+return () => clearTimeout(t);
+}
+if (step === 1 && breathCount >= 3) {
+setTimeout(() => setStep(2), 500);
+}
+}, [step, breathCount]);
+
+return (
+<div style={{
+position: “fixed”, inset: 0, zIndex: 100,
+background: “rgba(6,6,10,0.96)”, display: “flex”, flexDirection: “column”,
+alignItems: “center”, justifyContent: “center”, padding: 28,
+animation: “fadeIn 0.6s ease”,
+}}>
+<div style={{
+width: step === 1 ? 160 : 90, height: step === 1 ? 160 : 90,
+borderRadius: “50%”, display: “flex”, alignItems: “center”, justifyContent: “center”,
+fontSize: step === 1 ? 52 : 40, marginBottom: 36,
+background: `radial-gradient(circle, ${phase.color}20, ${phase.color}06)`,
+border: `2px solid ${phase.color}25`,
+transition: “all 2s ease-in-out”,
+animation: step === 1 ? “breathe 4s ease-in-out infinite” : “none”,
+}}>{r.icon}</div>
+
+```
+  <div style={{ textAlign: "center", maxWidth: 300 }}>
+    <div style={{
+      fontSize: 10, color: phase.color, fontWeight: 600,
+      letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 14,
+      fontFamily: "'DM Sans', sans-serif",
+    }}>Ritual de Entrada</div>
+
+    {step === 0 && (
+      <div style={{ animation: "slideUp 0.5s ease" }}>
+        <div style={{ fontSize: 19, color: "rgba(255,255,255,0.9)", fontFamily: "'Lora', serif", lineHeight: 1.5, marginBottom: 10 }}>{r.prompt}</div>
+        <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6, marginBottom: 28 }}>{r.instruction}</div>
+        <button onClick={() => setStep(1)} style={{
+          padding: "13px 30px", borderRadius: 50, background: phase.color,
+          color: "white", border: "none", fontSize: 13.5, fontWeight: 600,
+          fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
+        }}>Estou presente</button>
+        <div>
+          <button onClick={onSkip} style={{
+            marginTop: 12, padding: 8, background: "none", border: "none",
+            color: "rgba(255,255,255,0.25)", fontSize: 11.5, cursor: "pointer",
+            fontFamily: "'DM Sans', sans-serif",
+          }}>Saltar ritual →</button>
+        </div>
+      </div>
+    )}
+
+    {step === 1 && (
+      <div style={{ animation: "fadeIn 0.5s ease" }}>
+        <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 16 }}>
+          {[0, 1, 2].map(i => (
+            <div key={i} style={{
+              width: 8, height: 8, borderRadius: "50%",
+              background: i < breathCount ? phase.color : "rgba(255,255,255,0.1)",
+              transition: "background 0.5s ease",
+            }} />
+          ))}
+        </div>
+        <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Sans', sans-serif" }}>
+          {breathCount === 0 ? "Inspira profundamente..." : breathCount === 1 ? "Expira devagar..." : "Mais uma vez..."}
+        </div>
+      </div>
+    )}
+
+    {step === 2 && (
+      <div style={{ animation: "scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1)" }}>
+        <div style={{ fontSize: 15, color: "rgba(255,255,255,0.6)", fontFamily: "'Lora', serif", marginBottom: 24, fontStyle: "italic" }}>
+          Estás aqui. Estás presente.
+        </div>
+        <button onClick={onBegin} style={{
+          padding: "13px 30px", borderRadius: 50, background: phase.color,
+          color: "white", border: "none", fontSize: 13.5, fontWeight: 600,
+          fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
+        }}>Começar sessão</button>
+      </div>
+    )}
+  </div>
+</div>
+```
+
+);
+}
+
+// ─── Milestone Celebration ───
+function MilestoneOverlay({ milestone, onDismiss }) {
+return (
+<div style={{
+position: “fixed”, inset: 0, zIndex: 200,
+background: “rgba(6,6,10,0.97)”, display: “flex”, flexDirection: “column”,
+alignItems: “center”, justifyContent: “center”, padding: 28,
+animation: “fadeIn 0.4s ease”,
+}}>
+<div style={{ animation: “scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1)” }}>
+<div style={{
+width: 90, height: 90, borderRadius: “50%”,
+background: `radial-gradient(circle, ${milestone.color}28, ${milestone.color}06)`,
+display: “flex”, alignItems: “center”, justifyContent: “center”,
+fontSize: 44, marginBottom: 20, boxShadow: `0 0 50px ${milestone.color}18`,
+}}>{milestone.icon}</div>
+</div>
+<div style={{
+fontSize: 10, color: milestone.color, fontWeight: 600,
+letterSpacing: “0.14em”, textTransform: “uppercase”, marginBottom: 10,
+fontFamily: “‘DM Sans’, sans-serif”,
+}}>Marco alcançado</div>
+<div style={{
+fontSize: 20, color: “white”, fontFamily: “‘Lora’, serif”,
+textAlign: “center”, marginBottom: 8, lineHeight: 1.4,
+}}>{milestone.title}</div>
+<div style={{
+fontSize: 13.5, color: “rgba(255,255,255,0.4)”, fontFamily: “‘DM Sans’, sans-serif”,
+textAlign: “center”, maxWidth: 280, lineHeight: 1.6, marginBottom: 28,
+}}>{milestone.description}</div>
+<button onClick={onDismiss} style={{
+padding: “11px 26px”, borderRadius: 50,
+background: “rgba(255,255,255,0.07)”, color: “white”,
+border: “1px solid rgba(255,255,255,0.1)”, fontSize: 13,
+fontFamily: “‘DM Sans’, sans-serif”, cursor: “pointer”,
+}}>Continuar jornada</button>
+</div>
+);
+}
+
+// ─── Session End Ritual ───
+function SessionEndOverlay({ phase, onSaveInsight, onSkip }) {
+const [insight, setInsight] = useState(””);
+
+return (
+<div style={{
+position: “fixed”, inset: 0, zIndex: 100,
+background: “rgba(6,6,10,0.96)”, display: “flex”, flexDirection: “column”,
+alignItems: “center”, justifyContent: “center”, padding: 28,
+animation: “fadeIn 0.6s ease”,
+}}>
+<div style={{
+width: 60, height: 60, borderRadius: “50%”,
+background: `radial-gradient(circle, ${phase.color}20, ${phase.color}06)`,
+display: “flex”, alignItems: “center”, justifyContent: “center”,
+fontSize: 28, marginBottom: 28,
+}}>{phase.icon}</div>
+
+```
+  <div style={{
+    fontSize: 10, color: phase.color, fontWeight: 600,
+    letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 10,
+    fontFamily: "'DM Sans', sans-serif",
+  }}>Ritual de Saída</div>
+
+  <div style={{
+    fontSize: 18, color: "rgba(255,255,255,0.85)", fontFamily: "'Lora', serif",
+    textAlign: "center", marginBottom: 6, lineHeight: 1.4,
+  }}>O que levas desta conversa?</div>
+  <div style={{
+    fontSize: 13, color: "rgba(255,255,255,0.35)", fontFamily: "'DM Sans', sans-serif",
+    textAlign: "center", marginBottom: 20, maxWidth: 280, lineHeight: 1.5,
+  }}>Captura uma frase, um sentimento, uma descoberta.</div>
+
+  <textarea
+    value={insight}
+    onChange={e => setInsight(e.target.value)}
+    placeholder="Hoje percebi que..."
+    rows={3}
+    style={{
+      width: "100%", maxWidth: 320, padding: "14px 16px",
+      borderRadius: 14, border: `1px solid ${phase.color}30`,
+      background: "rgba(255,255,255,0.04)", color: "white",
+      fontSize: 14, fontFamily: "'Lora', serif", resize: "none",
+      outline: "none", lineHeight: 1.6,
+    }}
+  />
+
+  <div style={{ display: "flex", gap: 10, marginTop: 18, width: "100%", maxWidth: 320 }}>
+    <button onClick={onSkip} style={{
+      flex: 1, padding: "11px", borderRadius: 50,
+      background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)",
+      border: "1px solid rgba(255,255,255,0.06)", fontSize: 12.5,
+      fontFamily: "'DM Sans', sans-serif", cursor: "pointer",
+    }}>Saltar</button>
+    <button onClick={() => onSaveInsight(insight)} disabled={!insight.trim()} style={{
+      flex: 2, padding: "11px", borderRadius: 50,
+      background: insight.trim() ? phase.color : "rgba(255,255,255,0.05)",
+      color: "white", border: "none", fontSize: 12.5, fontWeight: 600,
+      fontFamily: "'DM Sans', sans-serif", cursor: insight.trim() ? "pointer" : "default",
+      opacity: insight.trim() ? 1 : 0.4, transition: "all 0.3s ease",
+    }}>Guardar insight</button>
+  </div>
+</div>
+```
+
+);
+}
+
+// ─── Insight Card ───
+function InsightCard({ insight, color }) {
+return (
+<div style={{
+padding: “13px 15px”, borderRadius: 13,
+background: `linear-gradient(135deg, ${color}08, transparent)`,
+borderLeft: `3px solid ${color}50`,
+}}>
+<div style={{
+fontSize: 13, color: “rgba(255,255,255,0.65)”, fontFamily: “‘Lora’, serif”,
+fontStyle: “italic”, lineHeight: 1.6,
+}}>”{insight.text}”</div>
+<div style={{
+fontSize: 10.5, color: “rgba(255,255,255,0.25)”, fontFamily: “‘DM Sans’, sans-serif”,
+fontStyle: “normal”, marginTop: 7,
+}}>Sessão {insight.session} · {insight.mirror}</div>
+</div>
+);
+}
+
+// ─── Pattern Badge ───
+function PatternBadge({ pattern }) {
+return (
+<div style={{
+display: “inline-flex”, alignItems: “center”, gap: 5,
+padding: “5px 11px”, borderRadius: 18,
+background: `${pattern.color}12`, border: `1px solid ${pattern.color}20`,
+fontSize: 11.5, color: `${pattern.color}cc`, fontFamily: “‘DM Sans’, sans-serif”, fontWeight: 500,
+}}>
+<span style={{ fontSize: 13 }}>{pattern.icon}</span>
+{pattern.label}
+<span style={{ background: `${pattern.color}25`, borderRadius: 8, padding: “1px 5px”, fontSize: 10 }}>×{pattern.count}</span>
+</div>
+);
+}
+
+// ─── Tab Navigation ───
+function TabNav({ active, onChange }) {
+const tabs = [
+{ id: “journey”, label: “Jornada”, icon: “◎” },
+{ id: “insights”, label: “Insights”, icon: “◈” },
+{ id: “patterns”, label: “Padrões”, icon: “◇” },
+];
+return (
+<div style={{ display: “flex”, gap: 3, padding: 3, borderRadius: 12, background: “rgba(255,255,255,0.035)” }}>
+{tabs.map(t => (
+<button key={t.id} onClick={() => onChange(t.id)} style={{
+flex: 1, padding: “9px 0”, borderRadius: 9, border: “none”,
+background: active === t.id ? “rgba(255,255,255,0.07)” : “transparent”,
+color: active === t.id ? “white” : “rgba(255,255,255,0.3)”,
+fontSize: 11.5, fontFamily: “‘DM Sans’, sans-serif”, fontWeight: 500,
+cursor: “pointer”, transition: “all 0.2s ease”,
+display: “flex”, alignItems: “center”, justifyContent: “center”, gap: 4,
+}}>
+<span style={{ fontSize: 13 }}>{t.icon}</span>{t.label}
+</button>
+))}
+</div>
+);
+}
+
+// ─── Main App ───
+export default function AnimaTravessia() {
+const [tab, setTab] = useState(“journey”);
+const [showRitual, setShowRitual] = useState(false);
+const [showEndRitual, setShowEndRitual] = useState(false);
+const [showMilestone, setShowMilestone] = useState(false);
+const [view, setView] = useState(“app”); // app | notes
+
+const phaseIdx = 0;
+const phase = PHASES[phaseIdx];
+const sessionsCompleted = 3;
+
+const sessions = [
+{ number: 1, title: “O Corpo que Habitas”, subtitle: “Reconexão com sensações físicas”, duration: 15 },
+{ number: 2, title: “Fome de Quê?”, subtitle: “Nutrição emocional vs. física”, duration: 12 },
+{ number: 3, title: “Onde Mora a Tensão”, subtitle: “Mapeamento corporal de emoções”, duration: 15 },
+{ number: 4, title: “O Peso Invisível”, subtitle: “Crenças sobre o corpo”, duration: 15 },
+{ number: 5, title: “Rituais de Cuidado”, subtitle: “Construindo práticas de presença”, duration: 12 },
+{ number: 6, title: “O Espelho Interior”, subtitle: “Como te vês vs. como és”, duration: 15 },
+{ number: 7, title: “Integração Somática”, subtitle: “Síntese da Fase 1”, duration: 20 },
+];
+
+const insights = [
+{ text: “Percebo que como mais quando sinto solidão. Não é fome, é um vazio emocional.”, session: 2, mirror: “SOMA” },
+{ text: “A tensão nos ombros aparece sempre antes de reuniões. O corpo antecipa o stress.”, session: 3, mirror: “SOMA” },
+{ text: “Nunca me perguntei O QUE o meu corpo precisa. Sempre decidi por ele.”, session: 1, mirror: “SOMA” },
+];
+
+const patterns = [
+{ icon: “🌀”, label: “Comer emocional”, count: 4, color: “#10b981” },
+{ icon: “⚡”, label: “Tensão antecipatória”, count: 3, color: “#f59e0b” },
+{ icon: “🔇”, label: “Desconexão corporal”, count: 2, color: “#ef4444” },
+];
+
+const milestone = {
+icon: “🌱”, title: “Corpo Desperto”, color: “#10b981”,
+description: “Completaste 3 sessões com SOMA. Começaste a ouvir o que o teu corpo sempre tentou dizer.”,
+};
+
+const conceptNotes = [
+{ num: “01”, title: “Sessões Guiadas, Não Chats Soltos”, color: “#10b981”,
+desc: “Cada mirror tem 7 sessões com tema, título evocativo e duração. Progressão desbloqueável — sessão 4 só abre após completar 3. O user sente caminho, não caos.” },
+{ num: “02”, title: “Rituais de Entrada e Saída”, color: “#3b82f6”,
+desc: “Antes: respiração + intenção para criar presença. Depois: captura de insight + reflexão. Separa ‘scroll automático’ de ‘trabalho interior’. Opcional, nunca forçado.” },
+{ num: “03”, title: “Mapa Visual de Jornada”, color: “#f59e0b”,
+desc: “Ring de progresso com 4 fases visíveis. Cada sessão ilumina um segmento. Stats: streak, insights, padrões. O user VÊ onde está e para onde vai.” },
+{ num: “04”, title: “Detecção de Padrões”, color: “#ef4444”,
+desc: “IA identifica temas recorrentes. Badges: ‘comer emocional ×4’. Timeline de quando cada padrão surgiu. Cross-mirror: padrão em SOMA informa SEREN.” },
+{ num: “05”, title: “Insights Automáticos”, color: “#8b5cf6”,
+desc: “Frases-chave extraídas de cada sessão. O user vê a sua evolução nas suas próprias palavras. Exportáveis como ‘diário da jornada’.” },
+{ num: “06”, title: “Milestones Contemplativos”, color: “#ec4899”,
+desc: “‘Corpo Desperto’, ‘Mente Clara’, ‘Horizonte Aberto’. Celebração contemplativa, não confetti. Sensação de conquista real, não gamificação vazia.” },
+{ num: “07”, title: “Cross-Mirror Intelligence”, color: “#06b6d4”,
+desc: “SEREN sabe o que SOMA descobriu. ECHO sintetiza TUDO. Cada fase constrói sobre a anterior. A IA integra progressivamente — nunca esquece.” },
+{ num: “08”, title: “Ritual de Saída + Captura”, color: “#84cc16”,
+desc: “Ao fechar sessão: ‘O que levas desta conversa?’ O user escreve em 1-2 frases. Esses insights alimentam o dashboard e a Insights Wall.” },
+];
+
+return (
+<div style={{
+minHeight: “100vh”, background: “#08080c”, color: “white”,
+fontFamily: “‘DM Sans’, sans-serif”, position: “relative”, overflow: “hidden”,
+}}>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>{`@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } } @keyframes slideUp { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: translateY(0) } } @keyframes scaleIn { from { opacity: 0; transform: scale(0.85) } to { opacity: 1; transform: scale(1) } } @keyframes breathe { 0%,100% { transform: scale(1); opacity: 0.6 } 50% { transform: scale(1.18); opacity: 1 } } @keyframes orbFloat { 0% { transform: translate(0,0) } 100% { transform: translate(15px,-25px) } } @keyframes pulse { 0%,100% { opacity: 0.4 } 50% { opacity: 1 } } * { box-sizing: border-box; margin: 0; padding: 0 } button { font-family: 'DM Sans', sans-serif } ::-webkit-scrollbar { width: 3px } ::-webkit-scrollbar-track { background: transparent } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px } textarea::placeholder { color: rgba(255,255,255,0.2) }`}</style>
+
+```
+  <AnimatedOrb color={phase.color} size="280px" x="-80px" y="-40px" delay={0} />
+  <AnimatedOrb color="#8b5cf6" size="180px" x="75%" y="55%" delay={4} />
+
+  {/* Overlays */}
+  {showRitual && <RitualOverlay phase={phase} onBegin={() => setShowRitual(false)} onSkip={() => setShowRitual(false)} />}
+  {showEndRitual && <SessionEndOverlay phase={phase} onSaveInsight={(t) => { alert(`Insight guardado: "${t}"`); setShowEndRitual(false); }} onSkip={() => setShowEndRitual(false)} />}
+  {showMilestone && <MilestoneOverlay milestone={milestone} onDismiss={() => setShowMilestone(false)} />}
+
+  {/* Header */}
+  <div style={{
+    position: "sticky", top: 0, zIndex: 50,
+    background: "rgba(8,8,12,0.88)", backdropFilter: "blur(20px)",
+    borderBottom: "1px solid rgba(255,255,255,0.04)",
+  }}>
+    <div style={{
+      maxWidth: 460, margin: "0 auto", padding: "11px 18px",
+      display: "flex", alignItems: "center", justifyContent: "space-between",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+        <div style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-0.02em" }}>ANIMA</div>
+        <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.22)", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 1 }}>Travessia</div>
+      </div>
+      <div style={{ display: "flex", gap: 3 }}>
+        {["app", "notes"].map(v => (
+          <button key={v} onClick={() => setView(v)} style={{
+            padding: "5px 10px", borderRadius: 7, border: "none",
+            background: view === v ? "rgba(255,255,255,0.08)" : "transparent",
+            color: view === v ? "white" : "rgba(255,255,255,0.3)",
+            fontSize: 10.5, fontWeight: 500, cursor: "pointer",
+          }}>{v === "app" ? "Protótipo" : "Conceitos"}</button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div style={{ maxWidth: 460, margin: "0 auto", padding: "0 18px 90px" }}>
+    {view === "app" ? (
+      <>
+        {/* Journey Ring */}
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "center",
+          padding: "28px 0 20px", animation: "fadeIn 0.7s ease",
+        }}>
+          <PhaseRing currentPhaseIndex={phaseIdx} sessionsCompleted={sessionsCompleted} totalSessions={7} />
+          <div style={{ display: "flex", gap: 22, marginTop: 20, fontSize: 11.5, color: "rgba(255,255,255,0.35)" }}>
+            {[
+              { val: "5", label: "dias seguidos" },
+              { val: "3", label: "insights" },
+              { val: "2", label: "padrões" },
+            ].map((s, i) => (
+              <div key={i} style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 18, fontWeight: 600, color: "white" }}>{s.val}</div>
+                <div>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div style={{ marginBottom: 18 }}><TabNav active={tab} onChange={setTab} /></div>
+
+        {/* Journey tab */}
+        {tab === "journey" && (
+          <div style={{ animation: "slideUp 0.4s ease" }}>
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 3 }}>
+                <span style={{ fontSize: 15 }}>{phase.icon}</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: phase.color }}>Fase 1 · Fundação</span>
+              </div>
+              <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.3)", lineHeight: 1.5 }}>
+                7 sessões para reconectar com o teu corpo e nutrição emocional
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+              {sessions.map((s, i) => (
+                <SessionCard key={i} session={s}
+                  isLocked={i > sessionsCompleted + 1}
+                  isCompleted={i < sessionsCompleted}
+                  isCurrent={i === sessionsCompleted}
+                  phaseColor={phase.color}
+                  onClick={() => { if (i === sessionsCompleted) setShowRitual(true); }}
+                />
+              ))}
+            </div>
+
+            {/* Next phases */}
+            <div style={{
+              marginTop: 24, padding: 14, borderRadius: 14,
+              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
+            }}>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>
+                Próximas fases
+              </div>
+              {PHASES.slice(1).map(p => (
+                <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 9, padding: "6px 0", opacity: 0.45 }}>
+                  <div style={{
+                    width: 26, height: 26, borderRadius: 7,
+                    background: `${p.color}12`, display: "flex",
+                    alignItems: "center", justifyContent: "center", fontSize: 13,
+                  }}>{p.icon}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 12.5, fontWeight: 500, color: p.color }}>{p.name}</div>
+                    <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.25)" }}>{p.phase} · 7 sessões</div>
+                  </div>
+                  <div style={{
+                    fontSize: 9.5, padding: "2px 7px", borderRadius: 5,
+                    background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.2)",
+                  }}>🔒 PRO</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Insights tab */}
+        {tab === "insights" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 9, animation: "slideUp 0.4s ease" }}>
+            <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.3)", marginBottom: 2 }}>Frases-chave da tua jornada</div>
+            {insights.map((ins, i) => <InsightCard key={i} insight={ins} color={phase.color} />)}
+            <div style={{ padding: 14, textAlign: "center", fontSize: 11, color: "rgba(255,255,255,0.18)", fontStyle: "italic" }}>
+              Insights são capturados no ritual de saída de cada sessão
+            </div>
+          </div>
+        )}
+
+        {/* Patterns tab */}
+        {tab === "patterns" && (
+          <div style={{ animation: "slideUp 0.4s ease" }}>
+            <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.3)", marginBottom: 10 }}>Padrões recorrentes</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 16 }}>
+              {patterns.map((p, i) => <PatternBadge key={i} pattern={p} />)}
+            </div>
+            <div style={{
+              padding: 16, borderRadius: 14, background: "rgba(255,255,255,0.025)",
+              border: "1px solid rgba(255,255,255,0.05)",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 9 }}>
+                <span style={{ fontSize: 16 }}>🌀</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600 }}>Comer emocional</span>
+                <span style={{ fontSize: 10.5, color: phase.color, marginLeft: "auto" }}>4 menções</span>
+              </div>
+              <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.6 }}>
+                Apareceu nas sessões 1, 2, 3 e 4. Conectado a momentos de solidão e stress. SOMA está a ajudar-te a reconhecer o gatilho antes da acção.
+              </div>
+              <div style={{
+                marginTop: 10, padding: "9px 12px", borderRadius: 9,
+                background: `${phase.color}08`, fontSize: 11.5,
+                color: "rgba(255,255,255,0.45)", fontStyle: "italic",
+              }}>
+                💡 Na Fase 2 (SEREN), vamos trabalhar a regulação emocional por trás deste padrão.
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Demo triggers */}
+        <div style={{
+          marginTop: 28, display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap",
+        }}>
+          {[
+            { label: "▶ Ritual Entrada", fn: () => setShowRitual(true) },
+            { label: "▶ Ritual Saída", fn: () => setShowEndRitual(true) },
+            { label: "▶ Milestone", fn: () => setShowMilestone(true) },
+          ].map((btn, i) => (
+            <button key={i} onClick={btn.fn} style={{
+              padding: "7px 14px", borderRadius: 7,
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              color: "rgba(255,255,255,0.4)", fontSize: 10.5, cursor: "pointer",
+            }}>{btn.label}</button>
+          ))}
+        </div>
+      </>
+    ) : (
+      /* Concept Notes */
+      <div style={{ padding: "22px 0", animation: "slideUp 0.4s ease" }}>
+        <div style={{ fontSize: 20, fontFamily: "'Lora', serif", marginBottom: 6 }}>A Travessia ANIMA</div>
+        <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.35)", lineHeight: 1.6, marginBottom: 24 }}>
+          8 conceitos para transformar o ANIMA de "chat com IA" em experiência transformadora. Combina com as features avançadas que já tinhas planeado.
+        </div>
+        {conceptNotes.map(c => (
+          <div key={c.num} style={{
+            marginBottom: 16, padding: 16, borderRadius: 14,
+            background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <div style={{
+                fontSize: 10, fontWeight: 700, color: c.color,
+                letterSpacing: "0.08em", fontFamily: "'DM Sans', sans-serif",
+              }}>{c.num}</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)" }}>{c.title}</div>
+            </div>
+            <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.4)", lineHeight: 1.7 }}>{c.desc}</div>
+          </div>
+        ))}
+
+        <div style={{
+          marginTop: 20, padding: 18, borderRadius: 14,
+          background: `linear-gradient(135deg, ${phase.color}08, #8b5cf608)`,
+          border: `1px solid ${phase.color}15`,
+        }}>
+          <div style={{ fontSize: 13.5, fontWeight: 600, color: "white", marginBottom: 6 }}>
+            Como isto se integra com o que já tens:
+          </div>
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>
+            As features avançadas (Insights Wall, Círculos, Ghosts, Jornadas, Gamificação, Emails, Referrals) continuam válidas. Estes 8 conceitos são a <span style={{ color: phase.color }}>camada experiencial</span> que transforma funcionalidades em vivência. São complementares, não substitutos.
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+```
+
+);
+}
