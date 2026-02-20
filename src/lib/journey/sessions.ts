@@ -90,13 +90,48 @@ export async function getSessionPrompt(mirrorSlug: MirrorSlug, sessionNumber: nu
 
   const { data: session } = await supabase
     .from('mirror_sessions')
-    .select('session_prompt')
+    .select('session_prompt, title_pt, subtitle_pt')
     .eq('mirror_slug', mirrorSlug)
     .eq('session_number', sessionNumber)
     .single()
 
   if (!session) return ''
-  return `\n\n--- SESSÃO ACTUAL ---\n${session.session_prompt}`
+
+  return `
+
+--- SESSÃO ACTUAL: "${session.title_pt}" (Sessão ${sessionNumber} de 7) ---
+
+${session.session_prompt}
+
+## INSTRUÇÕES DE GUIÃO PARA ESTA SESSÃO
+
+Esta sessão tem um tema específico e um fluxo guiado. NÃO faças perguntas soltas ou aleatórias.
+
+### ABERTURA (1ª mensagem):
+- Cumprimenta com calor e presença
+- Apresenta brevemente o tema desta sessão: "${session.title_pt} — ${session.subtitle_pt}"
+- Faz UMA pergunta de abertura directamente ligada ao tema da sessão
+- Exemplo de abertura: "Olá! Hoje vamos explorar [tema]. Antes de começar, [pergunta de abertura ligada ao tema]."
+
+### FLUXO GUIADO (mensagens seguintes):
+- Segue uma progressão natural de aprofundamento, sempre dentro do tema da sessão
+- Cada pergunta deve partir da resposta anterior — NUNCA mudes de assunto abruptamente
+- Usa no máximo 2-3 frases antes de fazer a próxima pergunta
+- Mantém um fio condutor claro ao longo de toda a conversa
+
+### ESTRUTURA DA SESSÃO:
+1. **Abertura** (msg 1): Apresentar tema + pergunta inicial
+2. **Exploração** (msg 2-4): Aprofundar a partir das respostas, sempre ligado ao tema
+3. **Reflexão** (msg 5-6): Ajudar a pessoa a ver padrões ou fazer conexões
+4. **Fecho suave** (msg 7+): Resumir o que emergiu, oferecer uma reflexão para levar consigo
+
+### REGRAS IMPORTANTES:
+- NÃO faças mais de UMA pergunta por mensagem
+- NÃO dês monólogos longos — sê breve e pergunta
+- CADA pergunta deve estar ligada à resposta anterior
+- Se a pessoa mudar de assunto, acolhe e gentilmente reconduze ao tema da sessão
+- Respostas curtas (3-5 frases máximo por mensagem)
+`
 }
 
 export async function startSession(userId: string, mirrorSlug: MirrorSlug, sessionNumber: number) {

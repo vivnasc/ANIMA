@@ -103,7 +103,11 @@ export async function POST(req: NextRequest) {
         .single()
 
       if (convError || !newConversation) {
-        return NextResponse.json({ error: 'Failed to create conversation' }, { status: 500 })
+        console.error('[Chat] Failed to create conversation:', convError?.message, convError?.details, convError?.code)
+        return NextResponse.json(
+          { error: `Failed to create conversation: ${convError?.message || 'unknown error'}` },
+          { status: 500 }
+        )
       }
 
       activeConversationId = newConversation.id
