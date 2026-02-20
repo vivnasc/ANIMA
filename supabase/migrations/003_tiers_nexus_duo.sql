@@ -112,6 +112,11 @@ CREATE TABLE IF NOT EXISTS duo_invites (
   expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days')
 );
 
+-- Indexes for duo_invites
+CREATE INDEX IF NOT EXISTS idx_duo_invites_inviter ON duo_invites(inviter_id);
+CREATE INDEX IF NOT EXISTS idx_duo_invites_accepted_by ON duo_invites(accepted_by);
+CREATE INDEX IF NOT EXISTS idx_duo_invites_expires ON duo_invites(expires_at);
+
 -- RLS for duo_invites
 ALTER TABLE duo_invites ENABLE ROW LEVEL SECURITY;
 

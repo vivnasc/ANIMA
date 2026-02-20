@@ -189,7 +189,7 @@ export async function getSessionProgress(userId: string) {
   if (!sessions || sessions.length === 0) return { completed: 0, total: 28, percentage: 0 }
 
   const completed = sessions.filter(s => s.status === 'completed').length
-  const total = 28
+  const total = sessions.length || 28
   const percentage = Math.round((completed / total) * 100)
 
   return { completed, total, percentage }
