@@ -14,7 +14,12 @@ const PATTERN_KEYWORDS: Record<string, string[]> = {
   identity_attachment: ['eu sou assim', "that's who I am", 'sempre fui', 'je suis comme ça'],
   control_seeking: ['preciso controlar', 'need to control', 'perco o controlo', 'besoin de contrôler'],
   generational_pattern: ['minha mãe também', 'my mother too', 'família toda', 'herdei', 'igual ao meu pai'],
-  relationship_pattern: ['sempre escolho', 'always choose', 'mesmo tipo de pessoa', 'repito nos relacionamentos']
+  relationship_pattern: ['sempre escolho', 'always choose', 'mesmo tipo de pessoa', 'repito nos relacionamentos'],
+  anxious_attachment: ['medo de abandono', 'fear of abandonment', 'preciso de reassurance', 'need reassurance', 'peur d\'abandon'],
+  avoidant_attachment: ['preciso de espaço', 'need space', 'sufocado', 'suffocated', 'independente demais', 'too independent'],
+  conflict_avoidance: ['evito conflito', 'avoid conflict', 'não digo o que penso', 'guardo para mim', 'je garde pour moi'],
+  codependency: ['sem ele não sou nada', 'without them I\'m nothing', 'preciso do outro', 'não sei estar sozinha', 'ne sais pas être seule'],
+  people_pleasing_relational: ['anulo-me', 'I lose myself', 'faço tudo pelo outro', 'sacrifico-me', 'je me sacrifie']
 }
 
 /**

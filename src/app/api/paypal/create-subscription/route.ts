@@ -23,13 +23,29 @@ async function getPayPalAccessToken(): Promise<string> {
   return data.access_token
 }
 
-export async function POST() {
+export async function POST(req: import('next/server').NextRequest) {
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Determine which plan to subscribe to
+    const body = await req.json().catch(() => ({}))
+    const tier = body.tier || 'essencial'
+
+    const planIdMap: Record<string, string | undefined> = {
+      essencial: process.env.PAYPAL_ESSENCIAL_PLAN_ID || process.env.PAYPAL_PREMIUM_PLAN_ID,
+      relacional: process.env.PAYPAL_RELACIONAL_PLAN_ID,
+      duo: process.env.PAYPAL_DUO_PLAN_ID,
+      profundo: process.env.PAYPAL_PROFUNDO_PLAN_ID,
+    }
+
+    const planId = planIdMap[tier]
+    if (!planId) {
+      return NextResponse.json({ error: 'Invalid tier or plan not configured' }, { status: 400 })
     }
 
     const accessToken = await getPayPalAccessToken()
@@ -44,11 +60,11 @@ export async function POST() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        plan_id: process.env.PAYPAL_PREMIUM_PLAN_ID,
+        plan_id: planId,
         custom_id: user.id,
         application_context: {
           brand_name: 'ANIMA',
-          return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?subscription=success`,
+          return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?subscription=success&tier=${tier}`,
           cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?subscription=cancelled`,
           user_action: 'SUBSCRIBE_NOW',
         },
