@@ -247,6 +247,9 @@ export function ChatWithSessions({
     setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: '' }])
 
     try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 30000)
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -255,11 +258,15 @@ export function ChatWithSessions({
           conversationId,
           mirrorSlug: mirror.slug,
           sessionNumber: activeSession?.session_number,
-        })
+        }),
+        signal: controller.signal,
       })
 
+      clearTimeout(timeout)
+
       if (!res.ok) {
-        const errorData = await res.json()
+        let errorData: { error?: string } = {}
+        try { errorData = await res.json() } catch { /* non-JSON response */ }
         setMessages(prev =>
           prev.map(m =>
             m.id === assistantId
@@ -313,10 +320,13 @@ export function ChatWithSessions({
       }
     } catch (err) {
       console.error('Chat error:', err)
+      const errorMsg = err instanceof DOMException && err.name === 'AbortError'
+        ? (language === 'pt' ? 'A resposta demorou demasiado. Tenta novamente.' : 'Response timed out. Please try again.')
+        : (language === 'pt' ? 'Erro de conexão. Tenta novamente.' : 'Connection error. Please try again.')
       setMessages(prev =>
         prev.map(m =>
           m.id === assistantId
-            ? { ...m, content: 'Connection error. Please try again.' }
+            ? { ...m, content: errorMsg }
             : m
         )
       )
@@ -325,7 +335,7 @@ export function ChatWithSessions({
     }
   }, [isLoading, conversationId, mirror.slug, activeSession?.session_number])
 
-  // Auto-greet when entering a new session (AI speaks first)
+  // Auto-greet: AI speaks first when entering a new session
   useEffect(() => {
     if (shouldAutoGreet && view === 'chat' && messages.length === 0 && !isLoading) {
       setShouldAutoGreet(false)
