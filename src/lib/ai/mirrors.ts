@@ -82,7 +82,7 @@ export const MIRRORS: Record<MirrorSlug, MirrorConfig> = {
     slug: 'nexus',
     name: 'NEXUS',
     icon: '🔗',
-    logo: '/logos/nexus-logo.svg',
+    logo: '/logos/nexus-logo.png',
     color: '#ec4899',
     phase: 'relational',
     isPremium: true,
