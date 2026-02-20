@@ -23,9 +23,12 @@ export async function initUserSessions(userId: string) {
     }
   }
 
-  await supabase.from('user_sessions').upsert(sessions, {
+  const { error } = await supabase.from('user_sessions').upsert(sessions, {
     onConflict: 'user_id,mirror_slug,session_number'
   })
+  if (error) {
+    console.error('[Sessions] Failed to init user sessions:', error.message)
+  }
 }
 
 export async function getUserSessions(userId: string, mirrorSlug: MirrorSlug) {
@@ -46,7 +49,25 @@ export async function getUserSessions(userId: string, mirrorSlug: MirrorSlug) {
       .eq('user_id', userId)
       .eq('mirror_slug', mirrorSlug)
       .order('session_number', { ascending: true })
-    return freshSessions || []
+
+    // If DB init failed, return fallback with session 1 available
+    if (!freshSessions || freshSessions.length === 0) {
+      console.error('[Sessions] DB init failed for user:', userId, 'mirror:', mirrorSlug)
+      return Array.from({ length: 7 }, (_, i) => ({
+        id: `fallback-${mirrorSlug}-${i + 1}`,
+        user_id: userId,
+        mirror_slug: mirrorSlug,
+        session_number: i + 1,
+        status: i === 0 ? 'available' as const : 'locked' as const,
+        started_at: null,
+        completed_at: null,
+        conversation_id: null,
+        exit_insight: null,
+        created_at: new Date().toISOString(),
+      }))
+    }
+
+    return freshSessions
   }
 
   return sessions
