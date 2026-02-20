@@ -174,17 +174,30 @@ export async function POST(req: NextRequest) {
       content: m.content
     }))
 
+    // Check API key exists
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('[Chat] ANTHROPIC_API_KEY is not set')
+      return NextResponse.json({ error: 'AI service not configured. Please set ANTHROPIC_API_KEY.' }, { status: 500 })
+    }
+
     // Call Claude API with streaming
     const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY!
+      apiKey: process.env.ANTHROPIC_API_KEY
     })
 
-    const stream = await anthropic.messages.stream({
-      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      system: fullPrompt,
-      messages: anthropicMessages
-    })
+    let stream
+    try {
+      stream = await anthropic.messages.stream({
+        model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5-20250929',
+        max_tokens: 1024,
+        system: fullPrompt,
+        messages: anthropicMessages
+      })
+    } catch (apiError) {
+      console.error('[Chat] Anthropic API error:', apiError)
+      const errMsg = apiError instanceof Error ? apiError.message : 'Unknown API error'
+      return NextResponse.json({ error: `AI service error: ${errMsg}` }, { status: 502 })
+    }
 
     // Create a ReadableStream for streaming response
     const encoder = new TextEncoder()
@@ -208,7 +221,7 @@ export async function POST(req: NextRequest) {
               conversation_id: activeConversationId,
               role: 'assistant' as const,
               content: fullResponse,
-              model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514'
+              model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5-20250929'
             })
 
           // Update conversation message count and title
