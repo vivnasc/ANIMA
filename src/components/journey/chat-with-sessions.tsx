@@ -93,6 +93,9 @@ export function ChatWithSessions({
     }
   }
 
+  // Flag to trigger auto-greeting after entering chat
+  const [shouldAutoGreet, setShouldAutoGreet] = useState(false)
+
   // Start session after ritual
   const handleEnterChat = async () => {
     if (!activeSession) return
@@ -112,7 +115,7 @@ export function ChatWithSessions({
     setConversationId(null)
     setMessageCount(0)
     setView('chat')
-    inputRef.current?.focus()
+    setShouldAutoGreet(true)
   }
 
   // Skip ritual, go straight to chat
@@ -133,6 +136,7 @@ export function ChatWithSessions({
     setConversationId(null)
     setMessageCount(0)
     setView('chat')
+    setShouldAutoGreet(true)
   }
 
   // End session - show exit ritual
@@ -222,19 +226,20 @@ export function ChatWithSessions({
     }
   }
 
-  // Send message
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!input.trim() || isLoading) return
+  // Core message sending logic (reusable)
+  const sendMessage = useCallback(async (messageText: string, isAutoGreeting = false) => {
+    if (isLoading) return
 
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
-      content: input.trim()
+      content: messageText
     }
 
-    setMessages(prev => [...prev, userMessage])
-    setInput('')
+    // For auto-greetings, don't show the user message in the chat
+    if (!isAutoGreeting) {
+      setMessages(prev => [...prev, userMessage])
+    }
     setIsLoading(true)
     setMessageCount(prev => prev + 1)
 
@@ -246,7 +251,7 @@ export function ChatWithSessions({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: userMessage.content,
+          message: messageText,
           conversationId,
           mirrorSlug: mirror.slug,
           sessionNumber: activeSession?.session_number,
@@ -318,6 +323,29 @@ export function ChatWithSessions({
     } finally {
       setIsLoading(false)
     }
+  }, [isLoading, conversationId, mirror.slug, activeSession?.session_number])
+
+  // Auto-greet when entering a new session (AI speaks first)
+  useEffect(() => {
+    if (shouldAutoGreet && view === 'chat' && messages.length === 0 && !isLoading) {
+      setShouldAutoGreet(false)
+      const greetings: Record<string, string> = {
+        pt: 'Olá, estou pronta para começar esta sessão.',
+        en: 'Hi, I\'m ready to start this session.',
+        es: 'Hola, estoy lista para empezar esta sesión.',
+        fr: 'Bonjour, je suis prête à commencer cette session.',
+      }
+      sendMessage(greetings[language] || greetings.pt, true)
+    }
+  }, [shouldAutoGreet, view, messages.length, isLoading, language, sendMessage])
+
+  // Send message from form
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!input.trim() || isLoading) return
+    const text = input.trim()
+    setInput('')
+    await sendMessage(text)
   }
 
   // Back to sessions from chat
