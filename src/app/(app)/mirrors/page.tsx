@@ -46,7 +46,7 @@ export default async function MirrorsPage() {
     seren: journey?.seren_conversations || 0,
     luma: journey?.luma_conversations || 0,
     echo: journey?.echo_conversations || 0,
-    nexus: (journey as Record<string, unknown>)?.nexus_conversations as number || 0,
+    nexus: journey?.nexus_conversations || 0,
   }
 
   const mirrorCount = mirrors.filter(m => canAccessMirror(tier, m.slug)).length

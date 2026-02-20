@@ -2,7 +2,7 @@ export type SubscriptionTier = 'free' | 'essencial' | 'relacional' | 'duo' | 'pr
 export type SubscriptionStatus = 'active' | 'inactive' | 'cancelled'
 export type Language = 'pt' | 'en' | 'fr' | 'es'
 export type MirrorSlug = 'soma' | 'seren' | 'luma' | 'echo' | 'nexus'
-export type JourneyPhase = 'foundation' | 'regulation' | 'expansion' | 'integration' | 'complete'
+export type JourneyPhase = 'foundation' | 'regulation' | 'expansion' | 'integration' | 'relational' | 'complete'
 export type MessageRole = 'user' | 'assistant'
 export type InsightType = 'awareness' | 'breakthrough' | 'connection' | 'integration'
 

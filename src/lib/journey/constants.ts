@@ -10,7 +10,7 @@ export interface PhaseConfig {
   unlocks: string[]
 }
 
-export const JOURNEY_PHASES: Record<Exclude<JourneyPhase, 'complete'>, PhaseConfig> = {
+export const JOURNEY_PHASES: Record<Exclude<JourneyPhase, 'complete' | 'relational'>, PhaseConfig> = {
   foundation: {
     name: 'Foundation',
     mirror: 'soma',
@@ -108,7 +108,7 @@ export const MILESTONES: Record<string, MilestoneConfig> = {
   }
 }
 
-export const PHASE_ORDER: JourneyPhase[] = ['foundation', 'regulation', 'expansion', 'integration', 'complete']
+export const PHASE_ORDER: JourneyPhase[] = ['foundation', 'regulation', 'expansion', 'integration', 'relational', 'complete']
 
 export const MIRROR_TO_PHASE: Record<string, string> = {
   soma: 'foundation',
@@ -118,11 +118,11 @@ export const MIRROR_TO_PHASE: Record<string, string> = {
   nexus: 'relational',
 }
 
-export const PHASE_TO_MIRROR: Record<Exclude<JourneyPhase, 'complete'>, MirrorSlug> = {
+export const PHASE_TO_MIRROR: Record<Exclude<JourneyPhase, 'complete' | 'relational'>, MirrorSlug> = {
   foundation: 'soma',
   regulation: 'seren',
   expansion: 'luma',
-  integration: 'echo'
+  integration: 'echo',
 }
 
 export const FREE_TIER_MONTHLY_LIMIT = 10

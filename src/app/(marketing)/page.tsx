@@ -34,6 +34,7 @@ const MIRROR_COLORS: Record<string, string> = {
   seren: '#60a5fa',
   luma: '#fbbf24',
   echo: '#c084fc',
+  nexus: '#ec4899',
 }
 
 const MIRROR_LOGOS: Record<string, string> = {
@@ -41,6 +42,7 @@ const MIRROR_LOGOS: Record<string, string> = {
   seren: '/logos/seren-logo.png',
   luma: '/logos/luma-logo.png',
   echo: '/logos/echo-logo.png',
+  nexus: '/logos/nexus-logo.png',
 }
 
 /* ── Animations: slow, organic ── */
@@ -225,44 +227,43 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          4. TESTIMONIALS — italic quotes, warm cards
+          4. EXPERIENCE — why this is NOT a chat
           ═══════════════════════════════════════════════ */}
       <section className="py-32">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} variants={stagger}>
-            <motion.h2
-              variants={fadeUp}
-              className="text-sm uppercase tracking-[0.2em] text-center mb-14"
-              style={{ color: W.textMuted }}
-            >
-              {t.socialProof.title}
-            </motion.h2>
+            <motion.div variants={fadeUp} className="text-center mb-16">
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold">{t.experience.title}</h2>
+              <p className="mt-4 text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: W.textSec }}>{t.experience.subtitle}</p>
+            </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              {t.socialProof.testimonials.map((testimonial, i) => (
-                <motion.div
-                  key={i}
-                  variants={fadeUp}
-                  whileHover={{ y: -4, transition: { duration: 0.3 } }}
-                  className={`rounded-2xl ${glass} p-7 transition-all duration-300`}
-                >
-                  <p className="font-heading italic leading-[1.8] mb-6" style={{ color: W.text }}>
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium"
-                      style={{ backgroundColor: W.goldSoft, color: W.gold }}
-                    >
-                      {testimonial.author[0]}
+            <div className="grid md:grid-cols-2 gap-6">
+              {t.experience.features.map((feature, i) => {
+                const icons = [
+                  // Guided sessions icon (compass)
+                  <svg key="compass" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke={W.gold} strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 0v2m0 16v2M2 12h2m16 0h2" /><path strokeLinecap="round" strokeLinejoin="round" d="M14.5 9.5l-5 2 2 5 5-2-2-5z" fill={`${W.gold}20`} /></svg>,
+                  // Memory icon (brain)
+                  <svg key="brain" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke={W.gold} strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" /></svg>,
+                  // Pattern detection icon (eye)
+                  <svg key="eye" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke={W.gold} strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+                  // Progress icon (chart)
+                  <svg key="chart" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke={W.gold} strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>,
+                ]
+                return (
+                  <motion.div
+                    key={i}
+                    variants={fadeUp}
+                    whileHover={{ y: -4, transition: { duration: 0.3 } }}
+                    className={`rounded-2xl ${glass} p-8 transition-all duration-300`}
+                  >
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ backgroundColor: W.goldSoft }}>
+                      {icons[i]}
                     </div>
-                    <div>
-                      <div className="text-sm font-medium" style={{ color: W.text }}>{testimonial.author}</div>
-                      <div className="text-xs" style={{ color: W.textMuted }}>{testimonial.role}</div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                    <h3 className="font-heading text-lg font-semibold mb-3" style={{ color: W.text }}>{feature.title}</h3>
+                    <p className="text-sm leading-[1.8]" style={{ color: W.textSec }}>{feature.description}</p>
+                  </motion.div>
+                )
+              })}
             </div>
           </motion.div>
         </div>
@@ -284,7 +285,7 @@ export default function LandingPage() {
               <div
                 className="absolute left-10 top-0 bottom-0 w-[2px] hidden md:block"
                 style={{
-                  background: `linear-gradient(to bottom, ${MIRROR_COLORS.soma}, ${MIRROR_COLORS.seren}, ${MIRROR_COLORS.luma}, ${MIRROR_COLORS.echo})`,
+                  background: `linear-gradient(to bottom, ${MIRROR_COLORS.soma}, ${MIRROR_COLORS.seren}, ${MIRROR_COLORS.luma}, ${MIRROR_COLORS.echo}, ${MIRROR_COLORS.nexus})`,
                   opacity: 0.4,
                 }}
               />
@@ -325,9 +326,10 @@ export default function LandingPage() {
             </motion.div>
 
             <div className="grid sm:grid-cols-2 gap-8">
-              {MIRROR_LIST.map((mirror) => {
+              {MIRROR_LIST.map((mirror, idx) => {
                 const color = MIRROR_COLORS[mirror.slug] || mirror.color
                 const logoSrc = MIRROR_LOGOS[mirror.slug]
+                const isLastOdd = MIRROR_LIST.length % 2 !== 0 && idx === MIRROR_LIST.length - 1
 
                 return (
                   <motion.div
@@ -339,7 +341,7 @@ export default function LandingPage() {
                       boxShadow: `0 20px 60px rgba(0, 0, 0, 0.08), 0 0 40px ${color}12`,
                       transition: { duration: 0.3 },
                     }}
-                    className={`group relative rounded-[20px] ${glass} p-10 transition-all duration-300 overflow-hidden`}
+                    className={`group relative rounded-[20px] ${glass} p-10 transition-all duration-300 overflow-hidden ${isLastOdd ? 'sm:col-span-2 sm:max-w-[50%] sm:mx-auto' : ''}`}
                   >
                     {/* Warm radial glow */}
                     <div
