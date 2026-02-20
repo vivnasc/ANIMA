@@ -87,10 +87,10 @@ export const translations: Record<Language, LandingTranslations> = {
       title1: 'Há perguntas que não fazes',
       titleHighlight: 'porque tens medo da resposta',
       subtitle:
-        'O ANIMA não te dá respostas. Dá-te os espelhos certos para as descobrires. Quatro conversas diferentes, cada uma mais funda que a anterior. Ao teu ritmo.',
+        'O ANIMA não te dá respostas. Dá-te cinco espelhos para as descobrires — do corpo às relações. Cada conversa vai mais fundo. Ao teu ritmo.',
       cta: 'Começar a Jornada',
       ctaSecondary: 'Como Funciona',
-      stat1: '4',
+      stat1: '5',
       stat1Label: 'Espelhos',
       stat2: '0',
       stat2Label: 'Julgamentos',
@@ -121,7 +121,7 @@ export const translations: Record<Language, LandingTranslations> = {
       ],
     },
     howItWorks: {
-      title: 'Quatro espelhos. Uma jornada.',
+      title: 'Cinco espelhos. Uma jornada.',
       subtitle:
         'Cada espelho olha para uma parte diferente de ti. Nenhum julga. Todos lembram.',
       steps: [
@@ -145,17 +145,23 @@ export const translations: Record<Language, LandingTranslations> = {
           description:
             'Os mesmos erros. As mesmas escolhas. Os mesmos medos. O ECHO mostra-te o que está escondido à vista de todos.',
         },
+        {
+          title: 'NEXUS — O que se passa entre ti e os outros',
+          description:
+            'As relações repetem o que não resolves sozinho. O NEXUS revela os teus padrões de vinculação, comunicação e conflito — para te ajudar a estar com os outros de outra forma.',
+        },
       ],
     },
     mirrors: {
       title: 'Os teus espelhos',
       subtitle:
-        'Não são chatbots. São companheiros de viagem que lembram cada passo, ligam os pontos e vão mais fundo contigo.',
+        'Não são chatbots. São companheiros que lembram cada passo, ligam os pontos e vão mais fundo contigo.',
       phases: {
         foundation: 'Fundação',
         regulation: 'Regulação',
         expansion: 'Expansão',
         integration: 'Integração',
+        relational: 'Relacional',
       },
       free: 'Grátis',
       premium: 'Premium',
@@ -244,11 +250,15 @@ export const translations: Record<Language, LandingTranslations> = {
         },
         {
           q: 'Como é diferente do ChatGPT?',
-          a: 'O ChatGPT não te conhece. O ANIMA lembra tudo o que partilhaste, liga os pontos entre conversas e aprofunda a cada sessão. Não é um chatbot — é um sistema desenhado para te ajudar a ver-te.',
+          a: 'O ChatGPT não te conhece. O ANIMA lembra tudo o que partilhaste, liga os pontos entre conversas e aprofunda a cada sessão. Não é um chatbot — é um sistema com 5 espelhos desenhado para te ajudar a ver-te.',
         },
         {
-          q: 'Preciso do plano Premium?',
-          a: 'Não. Podes explorar o SOMA gratuitamente e ter conversas reais. O Premium existe para quem quer a jornada completa com os 4 espelhos.',
+          q: 'Preciso de pagar para experimentar?',
+          a: 'Não. Podes explorar o SOMA gratuitamente e ter conversas reais. Os planos pagos existem para quem quer desbloquear todos os 5 espelhos e a jornada completa.',
+        },
+        {
+          q: 'O que é o NEXUS?',
+          a: 'O NEXUS é o 5° espelho, focado nas relações. Trabalha padrões de vinculação, comunicação, conflito e intimidade. Está disponível a partir do plano Relacional.',
         },
         {
           q: 'E se não gostar?',
@@ -285,10 +295,10 @@ export const translations: Record<Language, LandingTranslations> = {
       title1: 'There are questions you don\u2019t ask',
       titleHighlight: 'because you\u2019re afraid of the answer',
       subtitle:
-        'ANIMA doesn\u2019t give you answers. It gives you the right mirrors to find them yourself. Four different conversations, each deeper than the last. At your own pace.',
+        'ANIMA doesn\u2019t give you answers. It gives you five mirrors to find them — from body to relationships. Each conversation goes deeper. At your own pace.',
       cta: 'Start the Journey',
       ctaSecondary: 'How It Works',
-      stat1: '4',
+      stat1: '5',
       stat1Label: 'Mirrors',
       stat2: '0',
       stat2Label: 'Judgments',
@@ -319,7 +329,7 @@ export const translations: Record<Language, LandingTranslations> = {
       ],
     },
     howItWorks: {
-      title: 'Four mirrors. One journey.',
+      title: 'Five mirrors. One journey.',
       subtitle:
         'Each mirror looks at a different part of you. None judge. All remember.',
       steps: [
@@ -343,17 +353,23 @@ export const translations: Record<Language, LandingTranslations> = {
           description:
             'The same mistakes. The same choices. The same fears. ECHO shows you what\u2019s hidden in plain sight.',
         },
+        {
+          title: 'NEXUS \u2014 What happens between you and others',
+          description:
+            'Relationships repeat what you haven\u2019t resolved alone. NEXUS reveals your patterns of attachment, communication and conflict \u2014 to help you show up differently.',
+        },
       ],
     },
     mirrors: {
       title: 'Your mirrors',
       subtitle:
-        'They\u2019re not chatbots. They\u2019re travel companions that remember every step, connect the dots, and go deeper with you.',
+        'They\u2019re not chatbots. They\u2019re companions that remember every step, connect the dots, and go deeper with you.',
       phases: {
         foundation: 'Foundation',
         regulation: 'Regulation',
         expansion: 'Expansion',
         integration: 'Integration',
+        relational: 'Relational',
       },
       free: 'Free',
       premium: 'Premium',
@@ -442,11 +458,15 @@ export const translations: Record<Language, LandingTranslations> = {
         },
         {
           q: 'How is it different from ChatGPT?',
-          a: 'ChatGPT doesn\u2019t know you. ANIMA remembers everything you\u2019ve shared, connects the dots across conversations, and goes deeper with each session. It\u2019s not a chatbot \u2014 it\u2019s a system designed to help you see yourself.',
+          a: 'ChatGPT doesn\u2019t know you. ANIMA remembers everything you\u2019ve shared, connects the dots across conversations, and goes deeper with each session. It\u2019s not a chatbot \u2014 it\u2019s a system with 5 mirrors designed to help you see yourself.',
         },
         {
-          q: 'Do I need Premium?',
-          a: 'No. You can explore SOMA for free and have real conversations. Premium is for those who want the full journey with all 4 mirrors.',
+          q: 'Do I need to pay to try it?',
+          a: 'No. You can explore SOMA for free and have real conversations. Paid plans are for those who want to unlock all 5 mirrors and the full journey.',
+        },
+        {
+          q: 'What is NEXUS?',
+          a: 'NEXUS is the 5th mirror, focused on relationships. It works with attachment patterns, communication, conflict and intimacy. Available from the Relational plan.',
         },
         {
           q: 'What if I don\u2019t like it?',
@@ -483,10 +503,10 @@ export const translations: Record<Language, LandingTranslations> = {
       title1: 'Hay preguntas que no haces',
       titleHighlight: 'porque tienes miedo de la respuesta',
       subtitle:
-        'ANIMA no te da respuestas. Te da los espejos correctos para descubrirlas. Cuatro conversaciones diferentes, cada una m\u00E1s profunda que la anterior. A tu ritmo.',
+        'ANIMA no te da respuestas. Te da cinco espejos para descubrirlas \u2014 del cuerpo a las relaciones. Cada conversaci\u00F3n va m\u00E1s profundo. A tu ritmo.',
       cta: 'Empezar el Viaje',
       ctaSecondary: 'C\u00F3mo Funciona',
-      stat1: '4',
+      stat1: '5',
       stat1Label: 'Espejos',
       stat2: '0',
       stat2Label: 'Juicios',
@@ -517,7 +537,7 @@ export const translations: Record<Language, LandingTranslations> = {
       ],
     },
     howItWorks: {
-      title: 'Cuatro espejos. Un viaje.',
+      title: 'Cinco espejos. Un viaje.',
       subtitle:
         'Cada espejo mira una parte diferente de ti. Ninguno juzga. Todos recuerdan.',
       steps: [
@@ -541,17 +561,23 @@ export const translations: Record<Language, LandingTranslations> = {
           description:
             'Los mismos errores. Las mismas elecciones. Los mismos miedos. ECHO te muestra lo que est\u00E1 escondido a plena vista.',
         },
+        {
+          title: 'NEXUS \u2014 Lo que pasa entre t\u00FA y los dem\u00E1s',
+          description:
+            'Las relaciones repiten lo que no resuelves solo. NEXUS revela tus patrones de apego, comunicaci\u00F3n y conflicto \u2014 para ayudarte a estar con los dem\u00E1s de otra forma.',
+        },
       ],
     },
     mirrors: {
       title: 'Tus espejos',
       subtitle:
-        'No son chatbots. Son compa\u00F1eros de viaje que recuerdan cada paso, conectan los puntos y van m\u00E1s profundo contigo.',
+        'No son chatbots. Son compa\u00F1eros que recuerdan cada paso, conectan los puntos y van m\u00E1s profundo contigo.',
       phases: {
         foundation: 'Fundaci\u00F3n',
         regulation: 'Regulaci\u00F3n',
         expansion: 'Expansi\u00F3n',
         integration: 'Integraci\u00F3n',
+        relational: 'Relacional',
       },
       free: 'Gratis',
       premium: 'Premium',
@@ -562,8 +588,8 @@ export const translations: Record<Language, LandingTranslations> = {
       urgency: 'Precio de lanzamiento \u2014 aumenta pronto',
       tiers: [
         { name: 'Gratis', price: '\u20AC0', period: '/mes', features: ['10 conversaciones al mes', 'Espejo SOMA', 'Mapa de patrones b\u00E1sico'], cta: 'Empezar Gratis' },
-        { name: 'Esencial', price: '\u20AC19', period: '/mes', highlight: true, badge: 'M\u00E1s Popular', features: ['Conversaciones ilimitadas', '4 Espejos', '28 sesiones guiadas', 'Detecci\u00F3n de patrones AI', 'Diario exportable'], cta: 'Empezar Esencial' },
-        { name: 'Relacional', price: '\u20AC29', period: '/mes', features: ['Todo del Esencial', '5\u00BA Espejo: NEXUS', '35 sesiones totales', 'Patrones de apego y comunicaci\u00F3n'], cta: 'Empezar Relacional' },
+        { name: 'Esencial', price: '\u20AC19', period: '/mes', highlight: true, badge: 'M\u00E1s Popular', features: ['Conversaciones ilimitadas', '4 Espejos (SOMA, SEREN, LUMA, ECHO)', '28 sesiones guiadas', 'Detecci\u00F3n de patrones AI', 'Diario exportable'], cta: 'Empezar Esencial' },
+        { name: 'Relacional', price: '\u20AC29', period: '/mes', features: ['Todo del Esencial', '5\u00BA Espejo: NEXUS (relacional)', '35 sesiones totales', 'Patrones de apego y comunicaci\u00F3n'], cta: 'Empezar Relacional' },
         { name: 'Duo', price: '\u20AC39', period: '/mes', features: ['Todo del Relacional', 'Viaje compartido para 2', 'Insights cruzados de pareja', 'Invitaci\u00F3n por link'], cta: 'Empezar Duo' },
         { name: 'Profundo', price: '\u20AC49', period: '/mes', badge: 'M\u00E1ximo', features: ['Todo del Duo', 'Sesiones libres ilimitadas', 'Informe mensual AI', 'L\u00EDnea de evoluci\u00F3n'], cta: 'Empezar Profundo' },
       ],
@@ -582,11 +608,15 @@ export const translations: Record<Language, LandingTranslations> = {
         },
         {
           q: '\u00BFC\u00F3mo es diferente de ChatGPT?',
-          a: 'ChatGPT no te conoce. ANIMA recuerda todo lo que compartiste, conecta los puntos entre conversaciones y profundiza en cada sesi\u00F3n. No es un chatbot \u2014 es un sistema dise\u00F1ado para ayudarte a verte.',
+          a: 'ChatGPT no te conoce. ANIMA recuerda todo lo que compartiste, conecta los puntos entre conversaciones y profundiza en cada sesi\u00F3n. No es un chatbot \u2014 es un sistema con 5 espejos dise\u00F1ado para ayudarte a verte.',
         },
         {
-          q: '\u00BFNecesito Premium?',
-          a: 'No. Puedes explorar SOMA gratis y tener conversaciones reales. Premium es para quien quiere el viaje completo con los 4 espejos.',
+          q: '\u00BFNecesito pagar para probarlo?',
+          a: 'No. Puedes explorar SOMA gratis y tener conversaciones reales. Los planes de pago son para quienes quieren desbloquear los 5 espejos y el viaje completo.',
+        },
+        {
+          q: '\u00BFQu\u00E9 es NEXUS?',
+          a: 'NEXUS es el 5\u00BA espejo, enfocado en las relaciones. Trabaja patrones de apego, comunicaci\u00F3n, conflicto e intimidad. Disponible desde el plan Relacional.',
         },
         {
           q: '\u00BFY si no me gusta?',
@@ -623,10 +653,10 @@ export const translations: Record<Language, LandingTranslations> = {
       title1: 'Il y a des questions que tu ne poses pas',
       titleHighlight: 'parce que tu as peur de la r\u00E9ponse',
       subtitle:
-        'ANIMA ne te donne pas de r\u00E9ponses. Il te donne les bons miroirs pour les d\u00E9couvrir. Quatre conversations diff\u00E9rentes, chacune plus profonde que la pr\u00E9c\u00E9dente. \u00C0 ton rythme.',
+        'ANIMA ne te donne pas de r\u00E9ponses. Il te donne cinq miroirs pour les d\u00E9couvrir \u2014 du corps aux relations. Chaque conversation va plus profond. \u00C0 ton rythme.',
       cta: 'Commencer le Parcours',
       ctaSecondary: 'Comment \u00E7a Marche',
-      stat1: '4',
+      stat1: '5',
       stat1Label: 'Miroirs',
       stat2: '0',
       stat2Label: 'Jugements',
@@ -657,7 +687,7 @@ export const translations: Record<Language, LandingTranslations> = {
       ],
     },
     howItWorks: {
-      title: 'Quatre miroirs. Un parcours.',
+      title: 'Cinq miroirs. Un parcours.',
       subtitle:
         'Chaque miroir regarde une partie diff\u00E9rente de toi. Aucun ne juge. Tous se souviennent.',
       steps: [
@@ -681,17 +711,23 @@ export const translations: Record<Language, LandingTranslations> = {
           description:
             'Les m\u00EAmes erreurs. Les m\u00EAmes choix. Les m\u00EAmes peurs. ECHO te montre ce qui est cach\u00E9 en pleine vue.',
         },
+        {
+          title: 'NEXUS \u2014 Ce qui se passe entre toi et les autres',
+          description:
+            'Les relations r\u00E9p\u00E8tent ce que tu n\u2019as pas r\u00E9solu seul. NEXUS r\u00E9v\u00E8le tes sch\u00E9mas d\u2019attachement, de communication et de conflit \u2014 pour t\u2019aider \u00E0 \u00EAtre avec les autres autrement.',
+        },
       ],
     },
     mirrors: {
       title: 'Tes miroirs',
       subtitle:
-        'Ce ne sont pas des chatbots. Ce sont des compagnons de voyage qui se souviennent de chaque pas, relient les points et vont plus profond avec toi.',
+        'Ce ne sont pas des chatbots. Ce sont des compagnons qui se souviennent de chaque pas, relient les points et vont plus profond avec toi.',
       phases: {
         foundation: 'Fondation',
         regulation: 'R\u00E9gulation',
         expansion: 'Expansion',
         integration: 'Int\u00E9gration',
+        relational: 'Relationnel',
       },
       free: 'Gratuit',
       premium: 'Premium',
@@ -702,8 +738,8 @@ export const translations: Record<Language, LandingTranslations> = {
       urgency: 'Prix de lancement \u2014 augmente bient\u00F4t',
       tiers: [
         { name: 'Gratuit', price: '\u20AC0', period: '/mois', features: ['10 conversations par mois', 'Miroir SOMA', 'Carte de sch\u00E9mas basique'], cta: 'Commencer Gratuit' },
-        { name: 'Essentiel', price: '\u20AC19', period: '/mois', highlight: true, badge: 'Plus Populaire', features: ['Conversations illimit\u00E9es', '4 Miroirs', '28 sessions guid\u00E9es', 'D\u00E9tection de sch\u00E9mas AI', 'Journal exportable'], cta: 'Commencer Essentiel' },
-        { name: 'Relationnel', price: '\u20AC29', period: '/mois', features: ['Tout de l\'Essentiel', '5e Miroir: NEXUS', '35 sessions totales', 'Sch\u00E9mas d\'attachement et communication'], cta: 'Commencer Relationnel' },
+        { name: 'Essentiel', price: '\u20AC19', period: '/mois', highlight: true, badge: 'Plus Populaire', features: ['Conversations illimit\u00E9es', '4 Miroirs (SOMA, SEREN, LUMA, ECHO)', '28 sessions guid\u00E9es', 'D\u00E9tection de sch\u00E9mas AI', 'Journal exportable'], cta: 'Commencer Essentiel' },
+        { name: 'Relationnel', price: '\u20AC29', period: '/mois', features: ['Tout de l\'Essentiel', '5e Miroir\u00A0: NEXUS (relationnel)', '35 sessions totales', 'Sch\u00E9mas d\'attachement et communication'], cta: 'Commencer Relationnel' },
         { name: 'Duo', price: '\u20AC39', period: '/mois', features: ['Tout du Relationnel', 'Parcours partag\u00E9 pour 2', 'Insights crois\u00E9s du couple', 'Invitation par lien'], cta: 'Commencer Duo' },
         { name: 'Profond', price: '\u20AC49', period: '/mois', badge: 'Maximum', features: ['Tout du Duo', 'Sessions libres illimit\u00E9es', 'Rapport mensuel AI', 'Timeline d\'\u00E9volution'], cta: 'Commencer Profond' },
       ],
@@ -722,11 +758,15 @@ export const translations: Record<Language, LandingTranslations> = {
         },
         {
           q: 'En quoi c\u2019est diff\u00E9rent de ChatGPT\u00A0?',
-          a: 'ChatGPT ne te conna\u00EEt pas. ANIMA se souvient de tout ce que tu as partag\u00E9, relie les points entre les conversations et approfondit \u00E0 chaque session. Ce n\u2019est pas un chatbot \u2014 c\u2019est un syst\u00E8me con\u00E7u pour t\u2019aider \u00E0 te voir.',
+          a: 'ChatGPT ne te conna\u00EEt pas. ANIMA se souvient de tout ce que tu as partag\u00E9, relie les points entre les conversations et approfondit \u00E0 chaque session. Ce n\u2019est pas un chatbot \u2014 c\u2019est un syst\u00E8me avec 5 miroirs con\u00E7u pour t\u2019aider \u00E0 te voir.',
         },
         {
-          q: 'J\u2019ai besoin du Premium\u00A0?',
-          a: 'Non. Tu peux explorer SOMA gratuitement et avoir de vraies conversations. Le Premium est pour ceux qui veulent le parcours complet avec les 4 miroirs.',
+          q: 'Faut-il payer pour essayer\u00A0?',
+          a: 'Non. Tu peux explorer SOMA gratuitement et avoir de vraies conversations. Les plans payants sont pour ceux qui veulent d\u00E9bloquer les 5 miroirs et le parcours complet.',
+        },
+        {
+          q: 'C\u2019est quoi NEXUS\u00A0?',
+          a: 'NEXUS est le 5e miroir, centr\u00E9 sur les relations. Il travaille les sch\u00E9mas d\u2019attachement, de communication, de conflit et d\u2019intimit\u00E9. Disponible \u00E0 partir du plan Relationnel.',
         },
         {
           q: 'Et si \u00E7a ne me pla\u00EEt pas\u00A0?',

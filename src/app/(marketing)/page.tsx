@@ -34,6 +34,7 @@ const MIRROR_COLORS: Record<string, string> = {
   seren: '#60a5fa',
   luma: '#fbbf24',
   echo: '#c084fc',
+  nexus: '#ec4899',
 }
 
 const MIRROR_LOGOS: Record<string, string> = {
@@ -41,6 +42,7 @@ const MIRROR_LOGOS: Record<string, string> = {
   seren: '/logos/seren-logo.png',
   luma: '/logos/luma-logo.png',
   echo: '/logos/echo-logo.png',
+  nexus: '/logos/nexus-logo.png',
 }
 
 /* ── Animations: slow, organic ── */
@@ -284,7 +286,7 @@ export default function LandingPage() {
               <div
                 className="absolute left-10 top-0 bottom-0 w-[2px] hidden md:block"
                 style={{
-                  background: `linear-gradient(to bottom, ${MIRROR_COLORS.soma}, ${MIRROR_COLORS.seren}, ${MIRROR_COLORS.luma}, ${MIRROR_COLORS.echo})`,
+                  background: `linear-gradient(to bottom, ${MIRROR_COLORS.soma}, ${MIRROR_COLORS.seren}, ${MIRROR_COLORS.luma}, ${MIRROR_COLORS.echo}, ${MIRROR_COLORS.nexus})`,
                   opacity: 0.4,
                 }}
               />
@@ -325,9 +327,10 @@ export default function LandingPage() {
             </motion.div>
 
             <div className="grid sm:grid-cols-2 gap-8">
-              {MIRROR_LIST.map((mirror) => {
+              {MIRROR_LIST.map((mirror, idx) => {
                 const color = MIRROR_COLORS[mirror.slug] || mirror.color
                 const logoSrc = MIRROR_LOGOS[mirror.slug]
+                const isLastOdd = MIRROR_LIST.length % 2 !== 0 && idx === MIRROR_LIST.length - 1
 
                 return (
                   <motion.div
@@ -339,7 +342,7 @@ export default function LandingPage() {
                       boxShadow: `0 20px 60px rgba(0, 0, 0, 0.08), 0 0 40px ${color}12`,
                       transition: { duration: 0.3 },
                     }}
-                    className={`group relative rounded-[20px] ${glass} p-10 transition-all duration-300 overflow-hidden`}
+                    className={`group relative rounded-[20px] ${glass} p-10 transition-all duration-300 overflow-hidden ${isLastOdd ? 'sm:col-span-2 sm:max-w-[50%] sm:mx-auto' : ''}`}
                   >
                     {/* Warm radial glow */}
                     <div
