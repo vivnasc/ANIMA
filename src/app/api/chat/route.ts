@@ -29,12 +29,43 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Get user data for tier checking
-    const { data: userData } = await supabase
+    // Get user data for tier checking - ensure user record exists in public table
+    let { data: userData } = await supabase
       .from('users')
       .select('*')
       .eq('id', user.id)
       .single()
+
+    // If user doesn't exist in public users table, create them now
+    if (!userData) {
+      const { data: newUser, error: insertErr } = await supabase
+        .from('users')
+        .insert({
+          id: user.id,
+          email: user.email || '',
+          subscription_tier: 'free',
+          subscription_status: 'inactive',
+          language_preference: 'pt',
+          monthly_message_count: 0,
+          onboarding_completed: false,
+          preferred_start_mirror: 'soma'
+        })
+        .select('*')
+        .single()
+
+      if (insertErr) {
+        console.error('[Chat] Failed to create user record:', insertErr.message)
+        return NextResponse.json({ error: 'Failed to initialize user account' }, { status: 500 })
+      }
+      userData = newUser
+
+      // Also ensure user_journey exists
+      await supabase.from('user_journey').upsert({
+        user_id: user.id,
+        current_phase: 'foundation',
+        foundation_started_at: new Date().toISOString()
+      }, { onConflict: 'user_id' })
+    }
 
     // Check tier-based access
     const tier = (userData?.subscription_tier || 'free') as import('@/types/database').SubscriptionTier
