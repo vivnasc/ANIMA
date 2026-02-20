@@ -34,6 +34,7 @@ export interface UserJourney {
   seren_conversations: number
   luma_conversations: number
   echo_conversations: number
+  nexus_conversations: number
   total_conversations: number
   milestones_unlocked: string[]
   foundation_started_at: string | null

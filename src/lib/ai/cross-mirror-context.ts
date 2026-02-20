@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import type { MirrorSlug } from '@/types/database'
 
-const MIRROR_ORDER: MirrorSlug[] = ['soma', 'seren', 'luma', 'echo']
+const MIRROR_ORDER: MirrorSlug[] = ['soma', 'seren', 'luma', 'echo', 'nexus']
 
 export async function buildCrossMirrorContext(
   userId: string,

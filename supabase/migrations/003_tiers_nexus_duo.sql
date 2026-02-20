@@ -18,6 +18,11 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS duo_partner_id UUID REFERENCES users(
 ALTER TABLE users ADD COLUMN IF NOT EXISTS duo_invite_code TEXT UNIQUE;
 
 -- ============================================
+-- 2b. NEXUS CONVERSATIONS COUNTER
+-- ============================================
+ALTER TABLE user_journey ADD COLUMN IF NOT EXISTS nexus_conversations INT DEFAULT 0;
+
+-- ============================================
 -- 3. INSERT NEXUS MIRROR
 -- ============================================
 INSERT INTO mirrors (slug, name, description_pt, description_en, description_fr, description_es, system_prompt, color_theme, icon, journey_phase, is_active, is_premium, display_order)
