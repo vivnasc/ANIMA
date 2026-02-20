@@ -33,7 +33,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
     .eq('id', user.id)
     .single()
 
-  const isOwner = user.email === 'viv-saraiva@gmail.com'
+  const isOwner = user.email === 'viv.saraiva@gmail.com'
   const { canAccessMirror } = await import('@/lib/journey/constants')
   const tier = (userData?.subscription_tier || 'free') as import('@/types/database').SubscriptionTier
   if (!canAccessMirror(tier, mirror.slug) && !isOwner) {

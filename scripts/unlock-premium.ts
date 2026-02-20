@@ -1,11 +1,11 @@
 /**
  * Unlock a subscription tier for a specific user.
- * Usage: npx tsx scripts/unlock-premium.ts viv-saraiva@gmail.com [tier]
+ * Usage: npx tsx scripts/unlock-premium.ts viv.saraiva@gmail.com [tier]
  * Tiers: essencial | relacional | duo | profundo
  */
 import { createClient } from '@supabase/supabase-js'
 
-const email = process.argv[2] || 'viv-saraiva@gmail.com'
+const email = process.argv[2] || 'viv.saraiva@gmail.com'
 const tier = process.argv[3] || 'profundo'
 
 const validTiers = ['free', 'essencial', 'relacional', 'duo', 'profundo']
