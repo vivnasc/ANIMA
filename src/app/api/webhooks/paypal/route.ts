@@ -89,10 +89,20 @@ export async function POST(req: Request) {
       case 'BILLING.SUBSCRIPTION.ACTIVATED': {
         const userId = resource.custom_id
         if (userId) {
+          // Determine tier from plan ID (set in PayPal dashboard)
+          const planTierMap: Record<string, string> = {
+            [process.env.PAYPAL_ESSENCIAL_PLAN_ID || '']: 'essencial',
+            [process.env.PAYPAL_RELACIONAL_PLAN_ID || '']: 'relacional',
+            [process.env.PAYPAL_DUO_PLAN_ID || '']: 'duo',
+            [process.env.PAYPAL_PROFUNDO_PLAN_ID || '']: 'profundo',
+            [process.env.PAYPAL_PREMIUM_PLAN_ID || '']: 'essencial', // backward compat
+          }
+          const tier = planTierMap[resource.plan_id] || 'essencial'
+
           await supabase
             .from('users')
             .update({
-              subscription_tier: 'premium',
+              subscription_tier: tier,
               subscription_status: 'active',
               paypal_subscription_id: resource.id
             })
@@ -118,14 +128,13 @@ export async function POST(req: Request) {
       }
 
       case 'PAYMENT.SALE.COMPLETED': {
-        // Renewal successful - ensure user stays premium
+        // Renewal successful - ensure user stays active
         const subscriptionId = resource.billing_agreement_id
         if (subscriptionId) {
           await supabase
             .from('users')
             .update({
               subscription_status: 'active',
-              subscription_tier: 'premium'
             })
             .eq('paypal_subscription_id', subscriptionId)
         }

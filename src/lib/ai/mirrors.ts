@@ -8,6 +8,7 @@ export interface MirrorConfig {
   color: string
   phase: string
   isPremium: boolean
+  requiredTier?: string
   order: number
   descriptions: Record<Language, string>
 }
@@ -75,6 +76,23 @@ export const MIRRORS: Record<MirrorSlug, MirrorConfig> = {
       en: 'Identify patterns that echo through your life and integrate the entire journey.',
       fr: 'Identifiez les schémas qui résonnent dans votre vie et intégrez tout le parcours.',
       es: 'Identifica patrones que resuenan en tu vida e integra todo el viaje.'
+    }
+  },
+  nexus: {
+    slug: 'nexus',
+    name: 'NEXUS',
+    icon: '🔗',
+    logo: '/logos/nexus-logo.png',
+    color: '#ec4899',
+    phase: 'relational',
+    isPremium: true,
+    requiredTier: 'relacional' as const,
+    order: 5,
+    descriptions: {
+      pt: 'Explora os teus padrões relacionais — vinculação, comunicação, conflito e intimidade.',
+      en: 'Explore your relational patterns — attachment, communication, conflict and intimacy.',
+      fr: 'Explore tes schémas relationnels — attachement, communication, conflit et intimité.',
+      es: 'Explora tus patrones relacionales — apego, comunicación, conflicto e intimidad.'
     }
   }
 }

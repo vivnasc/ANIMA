@@ -83,14 +83,14 @@ export function SettingsForm({
             <span
               className="text-sm px-3 py-1 rounded-full font-medium"
               style={
-                subscriptionTier === 'premium'
+                subscriptionTier !== 'free'
                   ? { backgroundColor: '#9a7b5020', color: '#9a7b50' }
                   : { backgroundColor: '#e8e3da', color: '#7a746b' }
               }
             >
-              {subscriptionTier === 'premium' ? 'Premium' : 'Free'}
+              {subscriptionTier === 'free' ? 'Free' : subscriptionTier.charAt(0).toUpperCase() + subscriptionTier.slice(1)}
             </span>
-            {subscriptionTier === 'premium' && (
+            {subscriptionTier !== 'free' && (
               <span className="text-xs" style={{ color: '#7a746b' }}>
                 Status: {subscriptionStatus}
               </span>
@@ -100,13 +100,13 @@ export function SettingsForm({
           {subscriptionTier === 'free' ? (
             <div className="space-y-4">
               <div className="text-sm space-y-2">
-                <p className="font-medium" style={{ color: '#2a2520' }}>Upgrade para Premium — 19EUR/mes</p>
+                <p className="font-medium" style={{ color: '#2a2520' }}>Upgrade para Essencial — 19EUR/mes</p>
                 <ul className="space-y-1" style={{ color: '#5a554e' }}>
                   <li>Conversas ilimitadas</li>
                   <li>Todos os 4 Espelhos (SOMA, SEREN, LUMA, ECHO)</li>
-                  <li>Historico ilimitado</li>
-                  <li>Insights cross-mirror</li>
-                  <li>Exportar conversas</li>
+                  <li>28 sessoes guiadas com rituais</li>
+                  <li>Deteccao de padroes por AI</li>
+                  <li>Diario exportavel</li>
                 </ul>
               </div>
 
@@ -117,9 +117,12 @@ export function SettingsForm({
               )}
             </div>
           ) : (
-            <p className="text-sm" style={{ color: '#7a746b' }}>
-              Tens acesso total a todos os espelhos e funcionalidades.
-            </p>
+            <div className="text-sm space-y-2" style={{ color: '#7a746b' }}>
+              <p>Tens acesso a todos os espelhos e funcionalidades do teu plano.</p>
+              {subscriptionTier === 'essencial' && (
+                <p style={{ color: '#5a554e' }}>Faz upgrade para <strong>Relacional (29EUR)</strong> para desbloquear o NEXUS.</p>
+              )}
+            </div>
           )}
         </div>
       </div>

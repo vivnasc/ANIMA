@@ -392,7 +392,7 @@ export default function LandingPage() {
           7. PRICING — warm, clean, gold accent
           ═══════════════════════════════════════════════ */}
       <section id="pricing" className="py-32" style={{ borderTop: `1px solid ${W.surfaceBorder}` }}>
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-6xl mx-auto px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} variants={stagger}>
             <motion.div variants={fadeUp} className="text-center mb-8">
               <h2 className="font-heading text-3xl md:text-4xl font-semibold">{t.pricing.title}</h2>
@@ -403,69 +403,54 @@ export default function LandingPage() {
               <span className="text-sm" style={{ color: W.gold }}>{t.pricing.urgency}</span>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Free */}
-              <motion.div variants={fadeUp} className={`rounded-2xl ${glass} p-9`}>
-                <h3 className="font-heading text-xl font-semibold mb-1">{t.pricing.free.name}</h3>
-                <div className="flex items-baseline gap-1 mb-8">
-                  <span className="text-4xl font-heading font-semibold">{t.pricing.free.price}</span>
-                  <span style={{ color: W.textMuted }}>{t.pricing.free.period}</span>
-                </div>
-                <ul className="space-y-3.5 mb-10">
-                  {t.pricing.free.features.map((f) => (
-                    <li key={f} className="flex items-center gap-3 text-sm" style={{ color: W.textSec }}>
-                      <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke={MIRROR_COLORS.soma} strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/signup"
-                  className="block text-center rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:bg-[rgba(42,37,32,0.04)]"
-                  style={{ border: `1px solid ${W.surfaceBorderHover}`, color: W.textSec }}
-                >
-                  {t.pricing.free.cta}
-                </Link>
-              </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {t.pricing.tiers.map((tier, i) => {
+                const isHighlight = tier.highlight
+                const tierColors = ['#34d399', '#9a7b50', '#ec4899', '#c084fc', '#f59e0b']
+                const accentColor = tierColors[i] || W.gold
+                return (
+                  <motion.div
+                    key={tier.name}
+                    variants={fadeUp}
+                    className={`relative rounded-2xl ${glass} p-6 flex flex-col ${isHighlight ? 'animate-pulse-glow' : ''}`}
+                    style={isHighlight ? { borderColor: `${W.gold}40`, borderWidth: '2px' } : {}}
+                  >
+                    {tier.badge && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span className="rounded-full px-3 py-0.5 text-[10px] font-medium whitespace-nowrap" style={{ backgroundColor: accentColor, color: '#fff' }}>
+                          {tier.badge}
+                        </span>
+                      </div>
+                    )}
 
-              {/* Premium */}
-              <motion.div
-                variants={fadeUp}
-                className={`relative rounded-2xl ${glass} p-9 animate-pulse-glow`}
-                style={{ borderColor: `${W.gold}25` }}
-              >
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="rounded-full px-4 py-1 text-xs font-medium whitespace-nowrap" style={{ backgroundColor: W.gold, color: '#fff' }}>
-                    {t.pricing.premium.badge}
-                  </span>
-                </div>
-
-                <h3 className="font-heading text-xl font-semibold mb-1">{t.pricing.premium.name}</h3>
-                <div className="flex items-baseline gap-2 mb-8">
-                  <span className="text-4xl font-heading font-semibold">{t.pricing.premium.price}</span>
-                  <span style={{ color: W.textMuted }}>{t.pricing.premium.period}</span>
-                  <span className="text-sm line-through ml-2 opacity-40" style={{ color: W.textMuted }}>{t.pricing.premium.oldPrice}</span>
-                </div>
-                <ul className="space-y-3.5 mb-10">
-                  {t.pricing.premium.features.map((f) => (
-                    <li key={f} className="flex items-center gap-3 text-sm" style={{ color: W.textSec }}>
-                      <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke={W.gold} strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/signup"
-                  className="block text-center rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 hover:opacity-90"
-                  style={{ backgroundColor: W.gold, color: '#fff' }}
-                >
-                  {t.pricing.premium.cta}
-                </Link>
-              </motion.div>
+                    <h3 className="font-heading text-lg font-semibold mb-1">{tier.name}</h3>
+                    <div className="flex items-baseline gap-1 mb-6">
+                      <span className="text-3xl font-heading font-semibold">{tier.price}</span>
+                      <span className="text-sm" style={{ color: W.textMuted }}>{tier.period}</span>
+                    </div>
+                    <ul className="space-y-2.5 mb-8 flex-1">
+                      {tier.features.map((f) => (
+                        <li key={f} className="flex items-start gap-2 text-xs" style={{ color: W.textSec }}>
+                          <svg className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke={accentColor} strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <Link
+                      href="/signup"
+                      className="block text-center rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-300 hover:opacity-90"
+                      style={isHighlight
+                        ? { backgroundColor: W.gold, color: '#fff' }
+                        : { border: `1px solid ${W.surfaceBorderHover}`, color: W.textSec }
+                      }
+                    >
+                      {tier.cta}
+                    </Link>
+                  </motion.div>
+                )
+              })}
             </div>
 
             <motion.p variants={fadeUp} className="text-center text-sm mt-8" style={{ color: W.textMuted }}>

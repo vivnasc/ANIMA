@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { buildCrossMirrorContext } from '@/lib/ai/cross-mirror-context'
 import { detectAndSavePatterns } from '@/lib/ai/pattern-detection'
 import { MIRROR_PROMPTS } from '@/lib/ai/prompts'
-import { FREE_TIER_MONTHLY_LIMIT, FREE_TIER_MIRRORS } from '@/lib/journey/constants'
+import { canAccessMirror, getMonthlyLimit } from '@/lib/journey/constants'
 import { getSessionPrompt } from '@/lib/journey/sessions'
 import type { MirrorSlug } from '@/types/database'
 
@@ -36,20 +36,21 @@ export async function POST(req: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    // Check free tier limits
-    if (userData?.subscription_tier === 'free') {
-      // Check mirror access
-      if (!FREE_TIER_MIRRORS.includes(mirrorSlug)) {
-        return NextResponse.json(
-          { error: 'This mirror requires a premium subscription' },
-          { status: 403 }
-        )
-      }
+    // Check tier-based access
+    const tier = (userData?.subscription_tier || 'free') as import('@/types/database').SubscriptionTier
+    if (!canAccessMirror(tier, mirrorSlug)) {
+      return NextResponse.json(
+        { error: 'This mirror requires a higher subscription tier' },
+        { status: 403 }
+      )
+    }
 
-      // Check monthly limit - reset if new month
+    // Check monthly limit (only for tiers with limits)
+    const monthlyLimit = getMonthlyLimit(tier)
+    if (monthlyLimit !== null) {
       const now = new Date()
-      const lastReset = userData.last_reset_date ? new Date(userData.last_reset_date) : null
-      let messageCount = userData.monthly_message_count || 0
+      const lastReset = userData?.last_reset_date ? new Date(userData.last_reset_date) : null
+      let messageCount = userData?.monthly_message_count || 0
 
       if (!lastReset || lastReset.getMonth() !== now.getMonth() || lastReset.getFullYear() !== now.getFullYear()) {
         messageCount = 0
@@ -59,9 +60,9 @@ export async function POST(req: NextRequest) {
           .eq('id', user.id)
       }
 
-      if (messageCount >= FREE_TIER_MONTHLY_LIMIT) {
+      if (messageCount >= monthlyLimit) {
         return NextResponse.json(
-          { error: 'Monthly message limit reached. Upgrade to premium for unlimited conversations.' },
+          { error: 'Monthly message limit reached. Upgrade your plan for unlimited conversations.' },
           { status: 429 }
         )
       }
@@ -209,12 +210,12 @@ export async function POST(req: NextRequest) {
           // Update journey counters
           await updateJourneyCounters(supabase, user.id, mirrorSlug)
 
-          // Update monthly message count for free tier
-          if (userData?.subscription_tier === 'free') {
+          // Update monthly message count for tiers with limits
+          if (monthlyLimit !== null) {
             await supabase
               .from('users')
               .update({
-                monthly_message_count: (userData.monthly_message_count || 0) + 1
+                monthly_message_count: (userData?.monthly_message_count || 0) + 1
               })
               .eq('id', user.id)
           }

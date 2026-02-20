@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { MIRRORS } from '@/lib/ai/mirrors'
+import { canAccessMirror } from '@/lib/journey/constants'
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Language } from '@/types/database'
+import type { Language, SubscriptionTier } from '@/types/database'
 
 export default async function MirrorsPage() {
   const supabase = await createClient()
@@ -22,7 +23,7 @@ export default async function MirrorsPage() {
     .eq('user_id', user.id)
     .single()
 
-  const isPremium = userData?.subscription_tier === 'premium'
+  const tier = (userData?.subscription_tier || 'free') as SubscriptionTier
   const lang = (userData?.language_preference || 'pt') as Language
 
   const mirrors = Object.values(MIRRORS).sort((a, b) => a.order - b.order)
@@ -31,7 +32,13 @@ export default async function MirrorsPage() {
     foundation: { pt: 'Fase 1: Fundação', en: 'Phase 1: Foundation', fr: 'Phase 1: Fondation', es: 'Fase 1: Fundación' },
     regulation: { pt: 'Fase 2: Regulação', en: 'Phase 2: Regulation', fr: 'Phase 2: Régulation', es: 'Fase 2: Regulación' },
     expansion: { pt: 'Fase 3: Expansão', en: 'Phase 3: Expansion', fr: 'Phase 3: Expansion', es: 'Fase 3: Expansión' },
-    integration: { pt: 'Fase 4: Integração', en: 'Phase 4: Integration', fr: 'Phase 4: Intégration', es: 'Fase 4: Integración' }
+    integration: { pt: 'Fase 4: Integração', en: 'Phase 4: Integration', fr: 'Phase 4: Intégration', es: 'Fase 4: Integración' },
+    relational: { pt: 'Fase 5: Relacional', en: 'Phase 5: Relational', fr: 'Phase 5: Relationnel', es: 'Fase 5: Relacional' }
+  }
+
+  const tierLabels: Record<string, Record<Language, string>> = {
+    essencial: { pt: 'Essencial', en: 'Essential', fr: 'Essentiel', es: 'Esencial' },
+    relacional: { pt: 'Relacional', en: 'Relational', fr: 'Relationnel', es: 'Relacional' },
   }
 
   const conversationCounts: Record<string, number> = {
@@ -41,14 +48,16 @@ export default async function MirrorsPage() {
     echo: journey?.echo_conversations || 0
   }
 
+  const mirrorCount = mirrors.filter(m => canAccessMirror(tier, m.slug)).length
+
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 md:px-8 space-y-8">
       <div className="pt-8 md:pt-0">
         <h1 className="text-2xl md:text-3xl font-heading font-semibold" style={{ color: '#2a2520' }}>
-          {lang === 'pt' ? 'Os 4 Espelhos' :
-           lang === 'fr' ? 'Les 4 Miroirs' :
-           lang === 'es' ? 'Los 4 Espejos' :
-           'The 4 Mirrors'}
+          {lang === 'pt' ? `Os ${mirrorCount} Espelhos` :
+           lang === 'fr' ? `Les ${mirrorCount} Miroirs` :
+           lang === 'es' ? `Los ${mirrorCount} Espejos` :
+           `The ${mirrorCount} Mirrors`}
         </h1>
         <p style={{ color: '#7a746b' }}>
           {lang === 'pt' ? 'Cada espelho representa uma fase da tua jornada de autoconhecimento' :
@@ -59,12 +68,12 @@ export default async function MirrorsPage() {
       </div>
 
       {/* Journey Flow */}
-      <div className="flex items-center justify-center gap-3 py-2">
+      <div className="flex items-center justify-center gap-3 py-2 flex-wrap">
         {mirrors.map((mirror, i) => (
           <div key={mirror.slug} className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <Image src={mirror.logo} alt={mirror.name} width={24} height={24} className="rounded" />
-              <span className="text-sm font-medium" style={{ color: mirror.color }}>{mirror.name}</span>
+              <span className="text-sm font-medium" style={{ color: canAccessMirror(tier, mirror.slug) ? mirror.color : '#a89f94' }}>{mirror.name}</span>
             </div>
             {i < mirrors.length - 1 && (
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc7bc" strokeWidth="2" strokeLinecap="round">
@@ -78,8 +87,9 @@ export default async function MirrorsPage() {
       {/* Mirror Cards */}
       <div className="space-y-4">
         {mirrors.map((mirror) => {
-          const locked = mirror.isPremium && !isPremium
-          const convCount = conversationCounts[mirror.slug]
+          const locked = !canAccessMirror(tier, mirror.slug)
+          const convCount = conversationCounts[mirror.slug] || 0
+          const requiredTier = mirror.requiredTier || (mirror.isPremium ? 'essencial' : null)
 
           return (
             <div
@@ -89,7 +99,8 @@ export default async function MirrorsPage() {
                 backgroundColor: '#f0ece6',
                 border: '1px solid #ccc7bc',
                 borderLeftWidth: '4px',
-                borderLeftColor: mirror.color
+                borderLeftColor: locked ? '#a89f94' : mirror.color,
+                opacity: locked ? 0.7 : 1
               }}
             >
               <div className="p-6">
@@ -109,6 +120,11 @@ export default async function MirrorsPage() {
                         <span className="text-xs" style={{ color: '#7a746b' }}>
                           {phaseLabels[mirror.phase]?.[lang] || mirror.phase}
                         </span>
+                        {locked && requiredTier && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: '#e8e3da', color: '#7a746b' }}>
+                            {tierLabels[requiredTier]?.[lang] || requiredTier}
+                          </span>
+                        )}
                       </div>
                       <p className="text-sm mt-1" style={{ color: '#5a554e' }}>
                         {mirror.descriptions[lang]}

@@ -1,7 +1,7 @@
-export type SubscriptionTier = 'free' | 'premium'
+export type SubscriptionTier = 'free' | 'essencial' | 'relacional' | 'duo' | 'profundo'
 export type SubscriptionStatus = 'active' | 'inactive' | 'cancelled'
 export type Language = 'pt' | 'en' | 'fr' | 'es'
-export type MirrorSlug = 'soma' | 'seren' | 'luma' | 'echo'
+export type MirrorSlug = 'soma' | 'seren' | 'luma' | 'echo' | 'nexus'
 export type JourneyPhase = 'foundation' | 'regulation' | 'expansion' | 'integration' | 'complete'
 export type MessageRole = 'user' | 'assistant'
 export type InsightType = 'awareness' | 'breakthrough' | 'connection' | 'integration'
@@ -18,6 +18,8 @@ export interface User {
   last_reset_date: string
   onboarding_completed: boolean
   preferred_start_mirror: MirrorSlug
+  duo_partner_id: string | null
+  duo_invite_code: string | null
 }
 
 export interface UserJourney {

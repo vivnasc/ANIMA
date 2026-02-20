@@ -130,7 +130,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
               <span>{mirror.name}</span>
               {mirror.isPremium && (
                 <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full font-medium" style={{ backgroundColor: '#3d3530', color: '#6a6259' }}>
-                  PRO
+                  {mirror.requiredTier === 'relacional' ? 'REL' : 'PRO'}
                 </span>
               )}
             </Link>

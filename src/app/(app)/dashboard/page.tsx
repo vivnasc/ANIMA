@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getNextSuggestion } from '@/lib/journey/suggestions'
 import { MIRRORS } from '@/lib/ai/mirrors'
-import { MILESTONES } from '@/lib/journey/constants'
+import { MILESTONES, canAccessMirror } from '@/lib/journey/constants'
 import { getSessionProgress, getNextAvailableSession, getMirrorSessionDefinitions } from '@/lib/journey/sessions'
 import { getStreak } from '@/lib/journey/streaks'
 import { DashboardActions } from '@/components/journey/dashboard-actions'
@@ -374,9 +374,9 @@ export default async function DashboardPage() {
                   {mirror.descriptions[lang]}
                 </p>
               </div>
-              {mirror.isPremium && userData?.subscription_tier !== 'premium' && (
+              {mirror.isPremium && !canAccessMirror((userData?.subscription_tier || 'free') as import('@/types/database').SubscriptionTier, mirror.slug) && (
                 <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ backgroundColor: '#e8e3da', color: '#7a746b' }}>
-                  Premium
+                  Upgrade
                 </span>
               )}
             </Link>

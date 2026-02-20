@@ -110,11 +110,12 @@ export const MILESTONES: Record<string, MilestoneConfig> = {
 
 export const PHASE_ORDER: JourneyPhase[] = ['foundation', 'regulation', 'expansion', 'integration', 'complete']
 
-export const MIRROR_TO_PHASE: Record<MirrorSlug, Exclude<JourneyPhase, 'complete'>> = {
+export const MIRROR_TO_PHASE: Record<string, string> = {
   soma: 'foundation',
   seren: 'regulation',
   luma: 'expansion',
-  echo: 'integration'
+  echo: 'integration',
+  nexus: 'relational',
 }
 
 export const PHASE_TO_MIRROR: Record<Exclude<JourneyPhase, 'complete'>, MirrorSlug> = {
@@ -126,3 +127,64 @@ export const PHASE_TO_MIRROR: Record<Exclude<JourneyPhase, 'complete'>, MirrorSl
 
 export const FREE_TIER_MONTHLY_LIMIT = 10
 export const FREE_TIER_MIRRORS: MirrorSlug[] = ['soma']
+
+// Tier access configuration
+import type { SubscriptionTier } from '@/types/database'
+
+export interface TierConfig {
+  price: number
+  mirrors: MirrorSlug[]
+  monthlyLimit: number | null // null = unlimited
+  totalSessions: number
+  features: string[]
+}
+
+export const TIER_CONFIG: Record<SubscriptionTier, TierConfig> = {
+  free: {
+    price: 0,
+    mirrors: ['soma'],
+    monthlyLimit: 10,
+    totalSessions: 7,
+    features: ['soma_mirror', 'basic_patterns'],
+  },
+  essencial: {
+    price: 19,
+    mirrors: ['soma', 'seren', 'luma', 'echo'],
+    monthlyLimit: null,
+    totalSessions: 28,
+    features: ['all_4_mirrors', 'ai_patterns', 'diary_export', 'streaks'],
+  },
+  relacional: {
+    price: 29,
+    mirrors: ['soma', 'seren', 'luma', 'echo', 'nexus'],
+    monthlyLimit: null,
+    totalSessions: 35,
+    features: ['all_5_mirrors', 'ai_patterns', 'diary_export', 'streaks', 'relational_sessions'],
+  },
+  duo: {
+    price: 39,
+    mirrors: ['soma', 'seren', 'luma', 'echo', 'nexus'],
+    monthlyLimit: null,
+    totalSessions: 35,
+    features: ['all_5_mirrors', 'ai_patterns', 'diary_export', 'streaks', 'relational_sessions', 'duo_journey', 'shared_insights'],
+  },
+  profundo: {
+    price: 49,
+    mirrors: ['soma', 'seren', 'luma', 'echo', 'nexus'],
+    monthlyLimit: null,
+    totalSessions: 35,
+    features: ['all_5_mirrors', 'ai_patterns', 'diary_export', 'streaks', 'relational_sessions', 'free_sessions', 'monthly_report', 'pattern_timeline'],
+  },
+}
+
+export function canAccessMirror(tier: SubscriptionTier, mirror: MirrorSlug): boolean {
+  return TIER_CONFIG[tier]?.mirrors.includes(mirror) ?? false
+}
+
+export function hasFeature(tier: SubscriptionTier, feature: string): boolean {
+  return TIER_CONFIG[tier]?.features.includes(feature) ?? false
+}
+
+export function getMonthlyLimit(tier: SubscriptionTier): number | null {
+  return TIER_CONFIG[tier]?.monthlyLimit ?? 10
+}
