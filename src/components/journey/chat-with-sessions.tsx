@@ -93,8 +93,85 @@ export function ChatWithSessions({
     }
   }
 
-  // Flag to trigger auto-greeting after entering chat
-  const [shouldAutoGreet, setShouldAutoGreet] = useState(false)
+  // Direct API call for auto-greeting (bypasses state timing issues)
+  const triggerAutoGreeting = async (sessionNum: number) => {
+    const greetings: Record<string, string> = {
+      pt: 'Olá, estou pronta para começar esta sessão.',
+      en: 'Hi, I\'m ready to start this session.',
+      es: 'Hola, estoy lista para empezar esta sesión.',
+      fr: 'Bonjour, je suis prête à commencer cette session.',
+    }
+    const greetingText = greetings[language] || greetings.pt
+
+    const assistantId = crypto.randomUUID()
+    setMessages([{ id: assistantId, role: 'assistant', content: '' }])
+    setIsLoading(true)
+
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 30000)
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: greetingText,
+          conversationId: null,
+          mirrorSlug: mirror.slug,
+          sessionNumber: sessionNum,
+        }),
+        signal: controller.signal,
+      })
+
+      clearTimeout(timeout)
+
+      if (!res.ok) {
+        let errorData: { error?: string } = {}
+        try { errorData = await res.json() } catch { /* non-JSON */ }
+        setMessages([{ id: assistantId, role: 'assistant', content: errorData.error || 'Erro ao iniciar sessão. Tenta enviar uma mensagem.' }])
+        setIsLoading(false)
+        return
+      }
+
+      const reader = res.body?.getReader()
+      const decoder = new TextDecoder()
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          const chunk = decoder.decode(value)
+          const lines = chunk.split('\n\n').filter(Boolean)
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6))
+                if (data.text) {
+                  setMessages(prev =>
+                    prev.map(m => m.id === assistantId ? { ...m, content: m.content + data.text } : m)
+                  )
+                }
+                if (data.conversationId) {
+                  setConversationId(data.conversationId)
+                }
+              } catch { /* ignore parse errors */ }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Auto-greeting error:', err)
+      setMessages([{
+        id: assistantId,
+        role: 'assistant',
+        content: language === 'pt' ? 'Erro de conexão. Envia uma mensagem para começar.' : 'Connection error. Send a message to start.'
+      }])
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   // Start session after ritual
   const handleEnterChat = async () => {
@@ -115,7 +192,9 @@ export function ChatWithSessions({
     setConversationId(null)
     setMessageCount(0)
     setView('chat')
-    setShouldAutoGreet(true)
+
+    // Fire auto-greeting directly (no useEffect needed)
+    triggerAutoGreeting(activeSession.session_number)
   }
 
   // Skip ritual, go straight to chat
@@ -136,7 +215,9 @@ export function ChatWithSessions({
     setConversationId(null)
     setMessageCount(0)
     setView('chat')
-    setShouldAutoGreet(true)
+
+    // Fire auto-greeting directly
+    triggerAutoGreeting(activeSession.session_number)
   }
 
   // End session - show exit ritual
@@ -247,6 +328,9 @@ export function ChatWithSessions({
     setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: '' }])
 
     try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 30000)
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -255,11 +339,15 @@ export function ChatWithSessions({
           conversationId,
           mirrorSlug: mirror.slug,
           sessionNumber: activeSession?.session_number,
-        })
+        }),
+        signal: controller.signal,
       })
 
+      clearTimeout(timeout)
+
       if (!res.ok) {
-        const errorData = await res.json()
+        let errorData: { error?: string } = {}
+        try { errorData = await res.json() } catch { /* non-JSON response */ }
         setMessages(prev =>
           prev.map(m =>
             m.id === assistantId
@@ -273,6 +361,7 @@ export function ChatWithSessions({
 
       const reader = res.body?.getReader()
       const decoder = new TextDecoder()
+      let receivedText = false
 
       if (reader) {
         while (true) {
@@ -287,7 +376,20 @@ export function ChatWithSessions({
               try {
                 const data = JSON.parse(line.slice(6))
 
+                if (data.error) {
+                  // Handle streaming errors from the API
+                  setMessages(prev =>
+                    prev.map(m =>
+                      m.id === assistantId
+                        ? { ...m, content: language === 'pt' ? `Erro: ${data.error}. Tenta novamente.` : `Error: ${data.error}. Please try again.` }
+                        : m
+                    )
+                  )
+                  receivedText = true
+                }
+
                 if (data.text) {
+                  receivedText = true
                   setMessages(prev =>
                     prev.map(m =>
                       m.id === assistantId
@@ -311,12 +413,26 @@ export function ChatWithSessions({
           }
         }
       }
+
+      // If stream ended without any text, show error
+      if (!receivedText) {
+        setMessages(prev =>
+          prev.map(m =>
+            m.id === assistantId
+              ? { ...m, content: language === 'pt' ? 'Sem resposta do servidor. Tenta novamente.' : 'No response from server. Please try again.' }
+              : m
+          )
+        )
+      }
     } catch (err) {
       console.error('Chat error:', err)
+      const errorMsg = err instanceof DOMException && err.name === 'AbortError'
+        ? (language === 'pt' ? 'A resposta demorou demasiado. Tenta novamente.' : 'Response timed out. Please try again.')
+        : (language === 'pt' ? 'Erro de conexão. Tenta novamente.' : 'Connection error. Please try again.')
       setMessages(prev =>
         prev.map(m =>
           m.id === assistantId
-            ? { ...m, content: 'Connection error. Please try again.' }
+            ? { ...m, content: errorMsg }
             : m
         )
       )
@@ -324,20 +440,6 @@ export function ChatWithSessions({
       setIsLoading(false)
     }
   }, [isLoading, conversationId, mirror.slug, activeSession?.session_number])
-
-  // Auto-greet when entering a new session (AI speaks first)
-  useEffect(() => {
-    if (shouldAutoGreet && view === 'chat' && messages.length === 0 && !isLoading) {
-      setShouldAutoGreet(false)
-      const greetings: Record<string, string> = {
-        pt: 'Olá, estou pronta para começar esta sessão.',
-        en: 'Hi, I\'m ready to start this session.',
-        es: 'Hola, estoy lista para empezar esta sesión.',
-        fr: 'Bonjour, je suis prête à commencer cette session.',
-      }
-      sendMessage(greetings[language] || greetings.pt, true)
-    }
-  }, [shouldAutoGreet, view, messages.length, isLoading, language, sendMessage])
 
   // Send message from form
   const handleSubmit = async (e: React.FormEvent) => {

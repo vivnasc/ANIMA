@@ -21,8 +21,8 @@ interface SessionListProps {
 
 export function SessionList({ mirror, sessions, language, onSelectSession }: SessionListProps) {
   const completedCount = sessions.filter(s => s.status === 'completed').length
-  const totalCount = sessions.length
-  const progressPercent = Math.round((completedCount / totalCount) * 100)
+  const totalCount = sessions.length || 7
+  const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0
 
   const phaseLabels: Record<string, Record<Language, string>> = {
     foundation: { pt: 'Fundação', en: 'Foundation', fr: 'Fondation', es: 'Fundación' },

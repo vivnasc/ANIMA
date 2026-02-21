@@ -26,12 +26,37 @@ export default async function ChatPage({ params }: ChatPageProps) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Check premium access
-  const { data: userData } = await supabase
+  // Ensure user record exists in public users table
+  let { data: userData } = await supabase
     .from('users')
     .select('*')
     .eq('id', user.id)
     .single()
+
+  if (!userData) {
+    const { data: newUser } = await supabase
+      .from('users')
+      .insert({
+        id: user.id,
+        email: user.email || '',
+        subscription_tier: 'free',
+        subscription_status: 'inactive',
+        language_preference: 'pt',
+        monthly_message_count: 0,
+        onboarding_completed: false,
+        preferred_start_mirror: 'soma'
+      })
+      .select('*')
+      .single()
+    userData = newUser
+
+    // Also ensure user_journey exists
+    await supabase.from('user_journey').upsert({
+      user_id: user.id,
+      current_phase: 'foundation',
+      foundation_started_at: new Date().toISOString()
+    }, { onConflict: 'user_id' })
+  }
 
   const isOwner = user.email === 'viv.saraiva@gmail.com'
   const { canAccessMirror } = await import('@/lib/journey/constants')
@@ -44,10 +69,10 @@ export default async function ChatPage({ params }: ChatPageProps) {
 
   // Get session definitions and user progress
   const [sessionDefs, userSessions, streak, unseenMilestones] = await Promise.all([
-    getMirrorSessionDefinitions(slug),
-    getUserSessions(user.id, slug),
-    getStreak(user.id),
-    getUnseenMilestones(user.id, language)
+    getMirrorSessionDefinitions(slug).catch(() => []),
+    getUserSessions(user.id, slug).catch(() => []),
+    getStreak(user.id).catch(() => ({ current_streak: 0, longest_streak: 0 })),
+    getUnseenMilestones(user.id, language).catch(() => [])
   ])
 
   // Get journey info

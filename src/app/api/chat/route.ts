@@ -29,12 +29,43 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Get user data for tier checking
-    const { data: userData } = await supabase
+    // Get user data for tier checking - ensure user record exists in public table
+    let { data: userData } = await supabase
       .from('users')
       .select('*')
       .eq('id', user.id)
       .single()
+
+    // If user doesn't exist in public users table, create them now
+    if (!userData) {
+      const { data: newUser, error: insertErr } = await supabase
+        .from('users')
+        .insert({
+          id: user.id,
+          email: user.email || '',
+          subscription_tier: 'free',
+          subscription_status: 'inactive',
+          language_preference: 'pt',
+          monthly_message_count: 0,
+          onboarding_completed: false,
+          preferred_start_mirror: 'soma'
+        })
+        .select('*')
+        .single()
+
+      if (insertErr) {
+        console.error('[Chat] Failed to create user record:', insertErr.message)
+        return NextResponse.json({ error: 'Failed to initialize user account' }, { status: 500 })
+      }
+      userData = newUser
+
+      // Also ensure user_journey exists
+      await supabase.from('user_journey').upsert({
+        user_id: user.id,
+        current_phase: 'foundation',
+        foundation_started_at: new Date().toISOString()
+      }, { onConflict: 'user_id' })
+    }
 
     // Check tier-based access
     const tier = (userData?.subscription_tier || 'free') as import('@/types/database').SubscriptionTier
@@ -143,17 +174,30 @@ export async function POST(req: NextRequest) {
       content: m.content
     }))
 
+    // Check API key exists
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('[Chat] ANTHROPIC_API_KEY is not set')
+      return NextResponse.json({ error: 'AI service not configured. Please set ANTHROPIC_API_KEY.' }, { status: 500 })
+    }
+
     // Call Claude API with streaming
     const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY!
+      apiKey: process.env.ANTHROPIC_API_KEY
     })
 
-    const stream = await anthropic.messages.stream({
-      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      system: fullPrompt,
-      messages: anthropicMessages
-    })
+    let stream
+    try {
+      stream = await anthropic.messages.stream({
+        model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5-20250929',
+        max_tokens: 1024,
+        system: fullPrompt,
+        messages: anthropicMessages
+      })
+    } catch (apiError) {
+      console.error('[Chat] Anthropic API error:', apiError)
+      const errMsg = apiError instanceof Error ? apiError.message : 'Unknown API error'
+      return NextResponse.json({ error: `AI service error: ${errMsg}` }, { status: 502 })
+    }
 
     // Create a ReadableStream for streaming response
     const encoder = new TextEncoder()
@@ -177,7 +221,7 @@ export async function POST(req: NextRequest) {
               conversation_id: activeConversationId,
               role: 'assistant' as const,
               content: fullResponse,
-              model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514'
+              model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5-20250929'
             })
 
           // Update conversation message count and title
